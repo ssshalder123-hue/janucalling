@@ -3,23 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Janu Calling - Connect Instantly</title>
+    <title>Janu Calling - Premium Connect</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f5f5f5; text-align: center; margin: 0; padding: 20px; }
-        .container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
-        h2 { color: #ff4757; }
-        input, select, button { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
-        button { background-color: #ff4757; color: white; font-size: 16px; font-weight: bold; cursor: pointer; border: none; }
+        :root {
+            --primary: #ff4757;
+            --primary-hover: #ee3747;
+            --success: #2ed573;
+            --success-gradient: linear-gradient(135deg, #2ed573, #1abc9c);
+            --danger-gradient: linear-gradient(135deg, #ff4757, #ff6b81);
+            --neutral-gradient: linear-gradient(135deg, #747d8c, #2f3542);
+            --bg: #f1f2f6;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(180deg, #ffe4e6 0%, var(--bg) 100%); 
+            text-align: center; 
+            margin: 0; 
+            padding: 15px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container { 
+            max-width: 420px; 
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 30px 24px; 
+            border-radius: 20px; 
+            box-shadow: 0px 15px 35px rgba(255, 71, 87, 0.1); 
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-sizing: border-box;
+        }
+
+        h2 { 
+            color: var(--primary); 
+            margin-top: 0;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        h2 span {
+            display: inline-block;
+            animation: pulse 1.5s infinite;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,0.1), rgba(0,0,0,0));
+            margin: 20px 0;
+        }
+
+        h3 {
+            color: #2f3542;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #57606f;
+            font-size: 15px;
+        }
+
+        input, select { 
+            width: 100%; 
+            padding: 14px; 
+            margin: 12px 0; 
+            border-radius: 12px; 
+            border: 1.5px solid #e4e7eb; 
+            box-sizing: border-box; 
+            font-size: 15px;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+            color: #2f3542;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            background-color: #fff;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(255, 71, 87, 0.15);
+        }
+
+        /* প্রফেশনাল বাটন স্টাইল */
+        button { 
+            width: 100%; 
+            padding: 15px; 
+            margin: 12px 0; 
+            border-radius: 12px; 
+            color: white; 
+            font-size: 16px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            border: none; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+
+        .btn-primary {
+            background: var(--danger-gradient);
+            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #ee3747, #ff4757);
+        }
+
+        .btn-online { 
+            background: var(--success-gradient); 
+            box-shadow: 0 6px 20px rgba(46, 213, 115, 0.3);
+        }
+
+        .btn-offline { 
+            background: var(--neutral-gradient); 
+            box-shadow: 0 6px 20px rgba(116, 125, 140, 0.3);
+        }
+
         .hidden { display: none; }
-        .status-box { padding: 10px; margin: 10px 0; border-radius: 5px; font-weight: bold; }
-        .online { background-color: #2ed573; color: white; }
-        .offline { background-color: #747d8c; color: white; }
+
+        /* স্ট্যাটাস ও ব্যালেন্স বক্স */
+        .status-box { 
+            padding: 14px; 
+            margin: 18px 0; 
+            border-radius: 12px; 
+            font-weight: 600; 
+            font-size: 15px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        .online-ui { 
+            background-color: #e8fbf0; 
+            color: #2ed573; 
+            border: 1px solid #cbf7df;
+        }
+        .online-ui .status-indicator { background-color: #2ed573; animation: blink 1.2s infinite; }
+
+        .offline-ui { 
+            background-color: #f1f2f6; 
+            color: #57606f;
+            border: 1px solid #e4e7eb;
+        }
+        .offline-ui .status-indicator { background-color: #747d8c; }
+
+        #girl-status-text {
+            margin-top: 20px;
+            font-size: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            background: #fff5f5;
+        }
+
+        .info-card {
+            margin-top: 25px; 
+            background: #fff5f6; 
+            padding: 15px; 
+            border-radius: 12px; 
+            font-size: 13.5px; 
+            text-align: left;
+            color: #4b5563;
+            border-left: 4px solid var(--primary);
+            line-height: 1.5;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>❤️ Janu Calling System ❤️</h2>
+    <h2><span>❤️</span> Janu Calling System <span>❤️</span></h2>
     <hr>
 
     <!-- ১. লগইন ফর্ম -->
@@ -28,32 +211,34 @@
         <input type="text" id="name" placeholder="আপনার নাম লিখুন">
         <input type="number" id="phone" placeholder="মোবাইল নম্বর দিন">
         <select id="gender">
-            <option value="male">আমি একজন ছেলে (Customer)</option>
-            <option value="female">আমি একজন মেয়ে (Hosting)</option>
+            <option value="male">🙋‍♂️ আমি একজন ছেলে (Customer)</option>
+            <option value="female">🙋‍♀️ আমি একজন মেয়ে (Hosting)</option>
         </select>
-        <button onclick="login()">প্রবেশ করুন</button>
+        <button class="btn-primary" onclick="login()">প্রবেশ করুন</button>
     </div>
 
     <!-- ২. ছেলেদের ড্যাশবোর্ড -->
     <div id="boy-dashboard" class="hidden">
-        <h3>স্বাগতম, <span id="boy-name-display"></span></h3>
-        <div class="status-box online">আপনার অবশিষ্ট ব্যালেন্স: <span id="balance-display">0</span> মিনিট</div>
+        <h3>স্বাগতম, <span id="boy-name-display" style="color: var(--primary);"></span></h3>
+        <div class="status-box online-ui">
+            <span class="status-indicator"></span> আপনার অবশিষ্ট ব্যালেন্স: <span id="balance-display">0</span> মিনিট
+        </div>
         
-        <button style="background-color: #2ed573;" onclick="connectCall()">📞 এখনই কল করুন (অটো কানেক্ট)</button>
+        <button class="btn-online" onclick="connectCall()">📞 এখনই কল করুন (অটো কানেক্ট)</button>
         
-        <div style="margin-top: 20px; background: #ffe4e6; padding: 10px; border-radius: 5px; font-size: 14px;">
-            <strong>💳 রিচার্জ করার নিয়ম:</strong><br>
+        <div class="info-card">
+            <strong style="color: var(--primary);">💳 রিচার্জ করার নিয়ম:</strong><br>
             আমাদের UPI ID বা QR কোডে টাকা পাঠানোর পর আপনার মোবাইল নম্বরসহ স্ক্রিনশট আমাদের হোয়াটসঅ্যাপে পাঠান। অ্যাডমিন আপনার ব্যালেন্স যোগ করে দেবে।
         </div>
     </div>
 
     <!-- ৩. মেয়েদের ড্যাশবোর্ড -->
     <div id="girl-dashboard" class="hidden">
-        <h3>স্বাগতম, <span id="girl-name-display"></span></h3>
+        <h3>স্বাগতম, <span id="girl-name-display" style="color: var(--primary);"></span></h3>
         <p>আপনার বর্তমান স্ট্যাটাস সেট করুন:</p>
-        <button class="online" onclick="updateStatus('available')">🟢 আমি অনলাইন (কল আসবে)</button>
-        <button class="offline" onclick="updateStatus('offline')">⚫ আমি অফলাইন</button>
-        <div id="girl-status-text" style="margin-top:15px; font-weight:bold; color:#ff4757;"></div>
+        <button class="btn-online" onclick="updateStatus('available')">🟢 আমি অনলাইন (কল আসবে)</button>
+        <button class="btn-offline" onclick="updateStatus('offline')">⚫ আমি অফলাইন</button>
+        <div id="girl-status-text" style="font-weight:bold; color: var(--primary);"></div>
     </div>
 </div>
 
@@ -83,7 +268,7 @@
             if(gender === 'male') {
                 document.getElementById('boy-name-display').innerText = name;
                 document.getElementById('boy-dashboard').classList.remove('hidden');
-                document.getElementById('balance-display').innerText = "১০"; // টেস্ট মিনিট
+                document.getElementById('balance-display').innerText = "১০"; 
             } else {
                 document.getElementById('girl-name-display').innerText = name;
                 document.getElementById('girl-dashboard').classList.remove('hidden');
@@ -100,7 +285,7 @@
         });
         const data = await response.json();
         if(data.status === 'success') {
-            document.getElementById('girl-status-text').innerText = "আপনার স্ট্যাটাস এখন: " + (status === 'available' ? 'অনলাইন' : 'অফলাইন');
+            document.getElementById('girl-status-text').innerHTML = "আপনার স্ট্যাটাস এখন: " + (status === 'available' ? '<span style="color:#2ed573;">অনলাইন</span>' : '<span style="color:#747d8c;">অফলাইন</span>');
         }
     }
 
@@ -121,4 +306,3 @@
 </script>
 </body>
 </html>
-
