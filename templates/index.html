@@ -22,7 +22,7 @@
         .container { 
             max-width: 420px; width: 100%; background: rgba(255, 255, 255, 0.96); 
             padding: 25px 20px; border-radius: 24px; box-shadow: 0px 15px 35px rgba(255, 71, 87, 0.12); box-sizing: border-box;
-            position: relative; overflow: hidden;
+            position: relative;
         }
 
         h2 { color: var(--primary); margin: 0 0 15px 0; font-size: 24px; text-align: center; }
@@ -158,7 +158,7 @@
     </div>
 
     <div id="girl-dashboard" class="hidden">
-        <h3>👋 <span id="lbl-welcome-girl">স্বাগতম হোস্টিং</span>, <span id="girl-name-display" style="color: var(--primary);"></span></h3>
+        <h3>👋 <span id="lbl-welcome-girl">স্বাগতম হোস্ティング</span>, <span id="girl-name-display" style="color: var(--primary);"></span></h3>
         <p id="lbl-girl-p">অনলাইন থাকলে আপনার ফোনে লাইভ কলিং রিং বাজবে:</p>
         <button class="btn-online" id="lbl-go-online" onclick="updateStatus('available')">🟢 আমি অনলাইন</button>
         <button class="btn-offline" id="lbl-go-offline" onclick="updateStatus('offline')">⚫ আমি অফলাইন</button>
@@ -296,12 +296,10 @@
         window.location.href = `upi://pay?pa=halder.safikul2@ybl&pn=JanuCalling&am=${amount}&cu=INR&tn=Recharge_${myPhone}`;
     }
 
-    // 🔊 ব্রাউজারের আসল ওয়ান-ট্যাপ অডিও চালু করার প্লাগইন
     async function startAudioTransmission() {
         try {
             localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
             peerConnection = new RTCPeerConnection(rtcConfig);
-            
             localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
             
             peerConnection.ontrack = (event) => {
@@ -314,10 +312,9 @@
                 }
                 remoteAudio.srcObject = event.streams[0];
             };
-        } catch (e) { alert("দয়া করে কথা শোনার জন্য মাইক্রোফোন পারমিশন Allow করুন!"); }
+        } catch (e) { alert("Please allow microphone permission!"); }
     }
 
-    // 🙋‍♂️ ছেলেদের কল করার বাটন মেকানিজম
     async function startInAppCall() {
         const response = await fetch('/make_call', {
             method: 'POST',
@@ -329,13 +326,11 @@
         if(data.status === "ringing") {
             currentRoomId = data.room_id;
             document.getElementById('call-person-name').innerText = data.girl_name;
-            document.getElementById('call-status-label').innerText = "Ringing (ঘণ্টি বাজছে)...";
+            document.getElementById('call-status-label').innerText = "Ringing...";
             document.getElementById('incoming-actions').classList.add('hidden');
             document.getElementById('call-box').classList.remove('hidden');
-            
             try { document.getElementById('ringtone').play(); } catch(e){}
 
-            // 🛑 রিয়েল-টাইম রিসিভ চেকার লুপ (মেয়ের রিসিভ করার অপেক্ষা করা)
             checkAcceptInterval = setInterval(async () => {
                 const checkRes = await fetch('/check_incoming', {
                     method: 'POST',
@@ -344,12 +339,9 @@
                 });
                 const checkData = await checkRes.json();
                 
-                // মেয়ে যখনই "রিসিভ করুন" বাটনে চাপ দেবে, ব্যাকঅ্যান্ডে ইনকামিং ট্রু থেকে ফলস হয়ে যাবে
                 if(!checkData.incoming) { 
                     clearInterval(checkAcceptInterval);
                     try { document.getElementById('ringtone').pause(); } catch(e){}
-                    
-                    // মেয়ে রিসিভ করলেই কেবল ছেলেদের অডিও ট্রান্সমিশন এবং সঠিক টাইমার স্টার্ট হবে!
                     await startAudioTransmission();
                     startCallDurationTimer(); 
                 }
@@ -357,7 +349,6 @@
         } else { alert(data.message); }
     }
 
-    // 🙋‍♀️ মেয়েদের ইনকামিং কল রিসিভ উইন্ডো লুপ
     async function checkIncomingCalls() {
         if (document.getElementById('call-box').classList.contains('hidden')) {
             const response = await fetch('/check_incoming', {
@@ -373,4 +364,19 @@
                 document.getElementById('call-status-label').innerText = "⚠️ Incoming Call...";
                 document.getElementById('incoming-actions').classList.remove('hidden');
                 document.getElementById('call-box').classList.remove('hidden');
-          
+                try { document.getElementById('ringtone').play(); } catch(e){}
+            }
+        }
+    }
+
+    async function acceptIncomingCall() {
+        try { document.getElementById('ringtone').pause(); } catch(e){}
+        await startAudioTransmission();
+        
+        const response = await fetch('/accept_call', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ room_id: currentRoomId })
+        });
+        const data = await response.json();
+ 
