@@ -45,14 +45,14 @@
         .btn-online { background: linear-gradient(135deg, #2ed573, #1abc9c); }
         .btn-offline { background: #747d8c; }
 
-        .hidden { display: none; }
+        .hidden { display: none !important; }
         .status-box { padding: 15px; margin: 15px 0; border-radius: 12px; font-weight: 600; background: #e8fbf0; color: #2ed573; border: 1px solid #cbf7df; font-size: 16px; text-align: center; }
 
         .tab-system { display: flex; gap: 10px; margin-bottom: 15px; }
         .tab-btn { background: #e4e7eb; color: #57606f; padding: 10px; font-size: 14px; border-radius: 8px; width: 50%; }
         .tab-btn.active { background: var(--primary); color: white; }
 
-        /* নিয়মাবলী গাইড বক্স (Procedure Step Box) */
+        /* নিয়মাবলী গাইড বক্স */
         .procedure-box {
             background: #fff9f9; border: 1px dashed #ffb3b9; padding: 15px; border-radius: 14px; margin: 15px 0; text-align: left;
         }
@@ -73,7 +73,7 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #1e222b; color: white; display: flex;
             flex-direction: column; align-items: center; justify-content: space-between;
-            padding: 60px 20px; box-sizing: border-box; z-index: 9999;
+            padding: 60px 20px; box-shadow: box-sizing: border-box; z-index: 9999;
         }
         .avatar { width: 110px; height: 110px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 45px; animation: ripple 1.5s infinite; }
         .call-state { font-size: 18px; color: #a4b0be; margin-top: 10px; }
@@ -94,6 +94,7 @@
     <h2>❤️ Janu Calling App ❤️</h2>
     <hr>
 
+    <!-- লগইন / রেজিস্ট্রেশন স্ক্রিন (ধাপসহ নিয়মাবলী) -->
     <div id="auth-section">
         <div class="procedure-box">
             <h4>📌 অ্যাপটি ব্যবহারের নিয়মাবলী (Procedure):</h4>
@@ -125,6 +126,7 @@
         </div>
     </div>
 
+    <!-- কাস্টমার (ছেলেদের) ড্যাশবোর্ড সেকশন -->
     <div id="boy-dashboard" class="hidden">
         <h3>👋 স্বাগতম কাস্টমার, <span id="boy-name-display" style="color: var(--primary);"></span></h3>
         
@@ -150,14 +152,15 @@
         </div>
     </div>
 
+    <!-- মেয়েদের (হোস্টিং) ড্যাশবোর্ড সেকশন -->
     <div id="girl-dashboard" class="hidden">
         <h3>👋 স্বাগতম হোস্টিং, <span id="girl-name-display" style="color: var(--primary);"></span></h3>
         
         <div class="procedure-box" style="background: #fdfaf4; border-color: #f7e1b5;">
-            <h4 style="color: #f39c12;">🟢 হোস্টিং কাজের নিয়মাবলী:</h4>
+            <h4 style="color: #f39c12;">🟢 হোস্ٹنگ কাজের নিয়মাবলী:</h4>
             <ol class="step-list">
                 <li>কল পাওয়ার জন্য অবশ্যই <b>"আমি অনলাইন"</b> বাটনে ক্লিক করে রাখুন।</li>
-                <li>কাস্টমার কল দিলে আপনার স্ক্রিনে ফুল-স্ক্রিন রিংটোনসহ পপ-আপ আসবে।</li>
+                <li>কাস্টমার কল দিলে আপনার স্ক্রিনে ফুল-跨ন রিংটোনসহ পপ-আপ আসবে।</li>
                 <li><b>"রিসিভ করুন"</b> বাটনে চাপ দিয়ে কথা বলা শুরু করুন।</li>
             </ol>
         </div>
@@ -169,6 +172,7 @@
     </div>
 </div>
 
+<!-- ইন-অ্যাপ কলিং ফুল স্ক্রিন ইন্টারফেস -->
 <div id="call-screen" class="calling-overlay hidden">
     <div class="avatar">❤️</div>
     <h2 id="call-person-name" style="color: white; margin-top: 20px;">Connecting...</h2>
@@ -184,7 +188,8 @@
     </div>
 </div>
 
-<audio id="ringtone" src="https://assets.mixkit.co/active_storage/sfx/1360/1360-84.wav" loop></audio>
+<!-- ব্যাকগ্রাউন্ড অডিও রিংটোন -->
+<audio id="ringtone" src="https://assets.mixkit.co/active_storage/sfx/1360/1360-84.wav" loop preload="auto"></audio>
 
 <script>
     let myPhone = "";
@@ -226,6 +231,7 @@
 
     async function handleLogin() {
         const phone = document.getElementById('login-phone').value;
+        if(!phone) return alert("নম্বর দিন!");
         const response = await fetch('/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -277,7 +283,8 @@
             document.getElementById('call-status-label').innerText = "Ringing (ঘণ্টি বাজছে)...";
             document.getElementById('incoming-actions').classList.add('hidden');
             document.getElementById('call-screen').classList.remove('hidden');
-            document.getElementById('ringtone').play();
+            
+            try { document.getElementById('ringtone').play(); } catch(e) { console.log("Audio play delayed"); }
 
             let checkAccept = setInterval(async () => {
                 const checkRes = await fetch('/check_incoming', {
@@ -288,7 +295,7 @@
                 const checkData = await checkRes.json();
                 if(!checkData.incoming) { 
                     clearInterval(checkAccept);
-                    document.getElementById('ringtone').pause();
+                    try { document.getElementById('ringtone').pause(); } catch(e){}
                     startCallDurationTimer(); 
                 }
             }, 3000);
@@ -312,13 +319,13 @@
                 document.getElementById('call-status-label').innerText = "⚠️ ইনকামিং অ্যাপ কল...";
                 document.getElementById('incoming-actions').classList.remove('hidden');
                 document.getElementById('call-screen').classList.remove('hidden');
-                document.getElementById('ringtone').play();
+                try { document.getElementById('ringtone').play(); } catch(e){}
             }
         }
     }
 
     async function acceptIncomingCall() {
-        document.getElementById('ringtone').pause();
+        try { document.getElementById('ringtone').pause(); } catch(e){}
         const response = await fetch('/accept_call', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -362,8 +369,10 @@
     }
 
     async function hangUpCall() {
-        document.getElementById('ringtone').pause();
-        document.getElementById('ringtone').currentTime = 0;
+        try { 
+            document.getElementById('ringtone').pause(); 
+            document.getElementById('ringtone').currentTime = 0;
+        } catch(e){}
         clearInterval(callTimerInterval);
         clearInterval(balanceInterval);
         
