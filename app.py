@@ -1,21 +1,21 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify
 import sqlite3
 import random
 
 app = Flask(__name__)
 DATABASE = 'database.db'
 
-# ডাটাবেস তৈরি ও টেবিল সেটআপ
 def init_db():
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
-    # ইউজার টেবিল (ফোন নম্বর, নাম, জেন্ডার, ব্যালেন্স মিনিট, অনলাইন স্ট্যাটাস)
+    # ইউজার টেবিল (ব্যালেন্স ডিফল্ট ১০ মিনিট ফ্রি দেওয়া হলো নতুন রেজিস্ট্রেশনে)
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
-            phone TEXT PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            phone TEXT UNIQUE,
             name TEXT,
             gender TEXT,
-            balance INTEGER DEFAULT 0,
+            balance INTEGER DEFAULT 10,
             status TEXT DEFAULT 'offline'
         )
     ''')
@@ -27,45 +27,72 @@ init_db()
 @app.route('/')
 def home():
     return render_template('index.html')
-    
 
-# ১. রেজিস্ট্রেশন ও লগইন রুট
+# ১. নতুন ইউজার রেজিস্ট্রেশন (১০ মিনিট ফ্রি ব্যালেন্সসহ)
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    phone = data.get('phone')
+    name = data.get('name')
+    gender = data.get('gender')
+
+    if not phone or not name or not gender:
+        return jsonify({"status": "error", "message": "সব তথ্য সঠিকভাবে দিন!"})
+
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+    try:
+        # নতুন ইউজারকে ১০ মিনিট ফ্রি ব্যালেন্স দিয়ে সেভ করা হচ্ছে
+        cursor.execute("INSERT INTO users (phone, name, gender, balance, status) VALUES (?, ?, ?, 10, 'offline')", 
+                       (phone, name, gender))
+        conn.commit()
+        conn.close()
+        return jsonify({"status": "success", "message": "রেজিস্ট্রেশন সফল হয়েছে!", "name": name, "phone": phone, "gender": gender, "balance": 10})
+    except sqlite3.IntegrityError:
+        conn.close()
+        return jsonify({"status": "error", "message": "এই মোবাইল নম্বরটি অলরেডি রেজিস্টার্ড! দয়া করে লগইন করুন।"})
+
+# ২. পুরোনো ইউজার লগইন (নম্বর দিয়ে আগের ডেটা আনা)
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
     phone = data.get('phone')
-    name = data.get('name')
-    gender = data.get('gender') # 'male' অথবা 'female'
+
+    if not phone:
+        return jsonify({"status": "error", "message": "মোবাইল নম্বর দিন!"})
 
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM users WHERE phone = ?", (phone,))
+    cursor.execute("SELECT name, gender, balance FROM users WHERE phone = ?", (phone,))
     user = cursor.fetchone()
-
-    if not user:
-        # নতুন ইউজার হলে ডাটাবেসে সেভ হবে
-        cursor.execute("INSERT INTO users (phone, name, gender, balance, status) VALUES (?, ?, ?, ?, ?)",
-                       (phone, name, gender, 0 if gender == 'male' else 0, 'offline'))
-        conn.commit()
-    
     conn.close()
-    return jsonify({"status": "success", "message": "Logged in successfully", "phone": phone})
 
-# ২. মেয়েদের (Hosting) অনলাইন/অফলাইন স্ট্যাটাস আপডেট
+    if user:
+        return jsonify({
+            "status": "success", 
+            "name": user[0], 
+            "gender": user[1], 
+            "balance": user[2],
+            "phone": phone
+        })
+    else:
+        return jsonify({"status": "error", "message": "এই নম্বরে কোনো অ্যাকাউন্ট নেই! প্রথমে রেজিস্ট্রেশন করুন।"})
+
+# ৩. মেয়েদের অনলাইন/অফলাইন স্ট্যাটাস আপডেট
 @app.route('/update_status', methods=['POST'])
 def update_status():
     data = request.get_json()
     phone = data.get('phone')
-    status = data.get('status') # 'available', 'busy', 'offline'
+    status = data.get('status')
 
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     cursor.execute("UPDATE users SET status = ? WHERE phone = ?", (status, phone))
     conn.commit()
     conn.close()
-    return jsonify({"status": "success", "message": f"Status updated to {status}"})
+    return jsonify({"status": "success"})
 
-# ৩. ছেলেদের জন্য অটোমেটিক কল কানেক্ট লজিক
+# ৪. ছেলেদের অটো-কানেক্ট কল সিস্টেম (ব্যালেন্স চেকসহ)
 @app.route('/connect_call', methods=['POST'])
 def connect_call():
     data = request.get_json()
@@ -73,43 +100,40 @@ def connect_call():
 
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
-    
-    # ছেলের ব্যালেন্স চেক করো
     cursor.execute("SELECT balance FROM users WHERE phone = ?", (boy_phone,))
     boy = cursor.fetchone()
 
     if not boy or boy[0] <= 0:
         conn.close()
-        return jsonify({"status": "error", "message": "Insufficient balance! Please recharge."})
+        return jsonify({"status": "error", "message": "আপনার ব্যালেন্স শেষ! দয়া করে রিচার্জ করুন।"})
 
-    # এই মুহূর্তে কোন মেয়েরা 'available' বা অনলাইন আছে তাদের খোঁজো
+    # অনলাইন থাকা মেয়েদের খোঁজা হচ্ছে
     cursor.execute("SELECT phone, name FROM users WHERE gender = 'female' AND status = 'available'")
     available_girls = cursor.fetchall()
 
     if not available_girls:
         conn.close()
-        return jsonify({"status": "error", "message": "All hostings are busy or offline. Try again in a moment!"})
+        return jsonify({"status": "error", "message": "এই মুহূর্তে কোনো হোস্টিং অনলাইন নেই। দয়া করে একটু পরে চেষ্টা করুন!"})
 
-    # অনলাইন মেয়েদের মধ্য থেকে যেকোনো একজনকে অটোমেটিক র‍্যান্ডমলি বেছে নাও
     selected_girl = random.choice(available_girls)
     girl_phone = selected_girl[0]
     girl_name = selected_girl[1]
 
-    # দুজনের স্ট্যাটাস 'busy' করে দাও যাতে অন্য কেউ কল না পায়
-    cursor.execute("UPDATE users SET status = 'busy' WHERE phone = ?", (boy_phone,))
-    cursor.execute("UPDATE users SET status = 'busy' WHERE phone = ?", (girl_phone,))
+    # কল কানেক্ট হলে ১ মিনিট কেটে নেওয়া হচ্ছে টেস্ট হিসেবে
+    new_balance = boy[0] - 1
+    cursor.execute("UPDATE users SET balance = ? WHERE phone = ?", (new_balance, boy_phone))
     conn.commit()
     conn.close()
 
     return jsonify({
         "status": "connected",
-        "message": "Call connected successfully!",
         "girl_name": girl_name,
-        "channel_id": f"room_{boy_phone}_{girl_phone}" # Agora-র জন্য ইউনিক রুম আইডি
+        "new_balance": new_balance,
+        "channel_id": f"room_{boy_phone}_{girl_phone}"
     })
 
-# ৪. সিক্রেট অ্যাডমিন প্যানেল (তুমি কাস্টমারকে মিনিট রিচার্জ করে দেওয়ার জন্য)
-@app.route('/admin/recharge', methods=['POST'])
+# ৫. অ্যাডমিন রিচার্জ সিস্টেম
+@app.route('/admin_recharge', methods=['POST'])
 def admin_recharge():
     data = request.get_json()
     target_phone = data.get('phone')
@@ -120,7 +144,8 @@ def admin_recharge():
     cursor.execute("UPDATE users SET balance = balance + ? WHERE phone = ?", (minutes_to_add, target_phone))
     conn.commit()
     conn.close()
-    return jsonify({"status": "success", "message": f"Successfully added {minutes_to_add} minutes to {target_phone}"})
+    return jsonify({"status": "success", "message": f"সফলভাবে {minutes_to_add} মিনিট যোগ করা হয়েছে।"})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+    
