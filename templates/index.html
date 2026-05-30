@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Janu Calling - Ultimate Premium</title>
+    <title>Janu Calling - In-App Audio Connect</title>
     <style>
         :root {
             --primary: #ff4757;
-            --success-gradient: linear-gradient(135deg, #2ed573, #1abc9c);
-            --danger-gradient: linear-gradient(135deg, #ff4757, #ff6b81);
-            --neutral-gradient: linear-gradient(135deg, #747d8c, #2f3542);
+            --success: #2ed573;
+            --dark: #2f3542;
             --bg: #f1f2f6;
         }
 
@@ -40,41 +39,44 @@
         }
         button:active { transform: scale(0.97); }
 
-        .btn-primary { background: var(--danger-gradient); }
+        .btn-primary { background: linear-gradient(135deg, #ff4757, #ff6b81); }
         .btn-login { background: #2f3542; }
-        .btn-online { background: var(--success-gradient); }
+        .btn-online { background: linear-gradient(135deg, #2ed573, #1abc9c); }
         .btn-offline { background: #747d8c; }
-        .btn-whatsapp { background: #25D366; box-shadow: 0 4px 15px rgba(37,211,102,0.3); font-size: 18px; animation: pulse 1.5s infinite; }
 
         .hidden { display: none; }
         .status-box { padding: 12px; margin: 15px 0; border-radius: 12px; font-weight: 600; background: #e8fbf0; color: #2ed573; border: 1px solid #cbf7df; }
 
         .tab-system { display: flex; gap: 10px; margin-bottom: 15px; }
-        .tab-btn { background: #e4e7eb; color: #57606f; padding: 10px; font-size: 14px; border-radius: 8px; box-shadow: none; }
+        .tab-btn { background: #e4e7eb; color: #57606f; padding: 10px; font-size: 14px; border-radius: 8px; }
         .tab-btn.active { background: var(--primary); color: white; }
 
-        /* রিচার্জ প্ল্যান */
+        /* কলিং স্ক্রিন মডাল ওভারলে */
+        .calling-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #1e222b; color: white; display: flex;
+            flex-direction: column; align-items: center; justify-content: space-between;
+            padding: 60px 20px; box-sizing: border-box; z-index: 9999;
+        }
+        .avatar { width: 110px; height: 110px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 45px; animation: ripple 1.5s infinite; }
+        .call-state { font-size: 18px; color: #a4b0be; margin-top: 10px; }
+
+        .incoming-buttons { display: flex; gap: 20px; width: 100%; }
+        .btn-accept { background: #2ed573; }
+        .btn-decline { background: #ff4757; }
+
+        /* রিচার্জ বোর্ড */
         .plan-board { margin-top: 20px; text-align: left; }
-        .plan-title { font-weight: 700; color: #2f3542; margin-bottom: 10px; font-size: 16px; }
         .plan-card {
             background: #fff; border: 1.5px solid #ffe4e6; padding: 12px 15px; border-radius: 14px;
             margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
         }
-        .plan-info b { color: var(--primary); font-size: 16px; }
-        .plan-info p { margin: 2px 0 0 0; font-size: 12px; color: #747d8c; }
-        .btn-buy { width: auto; padding: 8px 15px; margin: 0; font-size: 13px; border-radius: 8px; background: linear-gradient(135deg, #4b7bec, #3867d6); }
+        .btn-buy { width: auto; padding: 6px 12px; margin: 0; font-size: 13px; background: #4b7bec; }
 
-        /* ইন-ড্যাশবোর্ড কল কন্ট্রোল */
-        .live-call-section { background: #fff5f6; padding: 15px; border-radius: 16px; border: 1.5px solid #ffe4e6; margin: 15px 0; }
-        .timer-text { font-size: 16px; color: var(--primary); font-weight: bold; margin-bottom: 10px; }
-        .mini-controls { display: flex; gap: 10px; justify-content: center; }
-        .mini-btn { padding: 8px 12px; font-size: 12px; border-radius: 8px; width: auto; margin: 0; background: #747d8c; }
-        .mini-btn.btn-end { background: #ff4757; }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.03); }
-            100% { transform: scale(1); }
+        @keyframes ripple {
+            0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(255, 71, 87, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
         }
     </style>
 </head>
@@ -84,7 +86,6 @@
     <h2>❤️ Janu Calling System ❤️</h2>
     <hr>
 
-    <!-- লগইন / রেজিস্ট্রেশন ফর্ম -->
     <div id="auth-section">
         <div class="tab-system">
             <button class="tab-btn active" id="tab-reg-btn" onclick="switchTab('reg')">নতুন অ্যাকাউন্ট</button>
@@ -92,9 +93,9 @@
         </div>
 
         <div id="reg-form">
-            <h3>নতুন রেজিস্ট্রেশন (১০ মি: ফ্রি)</h3>
+            <h3>রেজিস্ট্রেশন (২০ টাকা ফ্রি ব্যালেন্স)</h3>
             <input type="text" id="reg-name" placeholder="আপনার নাম">
-            <input type="number" id="reg-phone" placeholder="হোয়াটসঅ্যাপ নম্বর (যেমন: 91...)">
+            <input type="number" id="reg-phone" placeholder="মোাবাইল নম্বর দিন">
             <select id="reg-gender">
                 <option value="male">🙋‍♂️ আমি একজন ছেলে (Customer)</option>
                 <option value="female">🙋‍♀️ আমি একজন মেয়ে (Hosting)</option>
@@ -104,81 +105,67 @@
 
         <div id="login-form" class="hidden">
             <h3>মোবাইল নম্বর দিয়ে লগইন</h3>
-            <input type="number" id="login-phone" placeholder="আপনার মোবাইল নম্বর দিন">
+            <input type="number" id="login-phone" placeholder="মোবাইল নম্বর দিন">
             <button class="btn-login" onclick="handleLogin()">🔓 প্রবেশ করুন</button>
         </div>
     </div>
 
-    <!-- ছেলেদের ড্যাশবোর্ড -->
     <div id="boy-dashboard" class="hidden">
         <h3>স্বাগতম, <span id="boy-name-display" style="color: var(--primary);"></span></h3>
         <div class="status-box">
-            ⏱️ আপনার অবশিষ্ট ব্যালেন্স: <span id="balance-display">0</span> মিনিট
+            💰 আপনার ব্যালেন্স: ৳<span id="balance-display">0</span> (২ টাকা / মিনিট)
         </div>
+        <button class="btn-online" onclick="startInAppCall()">📞 এখনই ইন-অ্যাপ কল করুন</button>
         
-        <button class="btn-online" id="main-call-btn" onclick="connectCall()">📞 এখনই কল করুন (Auto Connect)</button>
-        
-        <!-- লাইভ কল কন্ট্রোল সেকশন (ড্যাশবোর্ডের ভেতরেই থাকবে) -->
-        <div id="live-call-box" class="live-call-section hidden">
-            <div class="timer-text" id="timer-display">কল চালু সময় (00:00)</div>
-            
-            <!-- কাস্টমার এই বাটনে ক্লিক করলেই সরাসরি হোয়াটসঅ্যাপ খুলে যাবে -->
-            <a id="wa-direct-link" href="#" target="_blank" style="text-decoration: none;">
-                <button class="btn-whatsapp">🟢 ক্লিক করে হোয়াটসঅ্যাপে কল দিন</button>
-            </a>
-
-            <div class="mini-controls" style="margin-top: 10px;">
-                <button class="mini-btn" onclick="alert('মিউট করা হয়েছে')">🔇 Mute</button>
-                <button class="mini-btn" onclick="alert('স্পিকার অন করা হয়েছে')">🔊 Speaker</button>
-                <button class="mini-btn btn-end" onclick="endCall()">🛑 কাটুন</button>
-            </div>
-        </div>
-        
-        <!-- রিচার্জ প্ল্যান বোর্ড -->
         <div class="plan-board">
-            <div class="plan-title">💳 স্পেশাল রিচার্জ প্ল্যান বোর্ড:</div>
-            <div class="plan-card">
-                <div class="plan-info"><b>💰 ₹১০ প্ল্যান</b><p>টকটাইম পাবেন: ১০ মিনিট</p></div>
-                <button class="btn-buy" onclick="payUPI(10)">রিচার্জ</button>
-            </div>
-            <div class="plan-card">
-                <div class="plan-info"><b>💰 ₹৩০ প্ল্যান</b><p>টকটাইম পাবেন: ৩৫ মিনিট</p></div>
-                <button class="btn-buy" onclick="payUPI(30)">রিচার্জ</button>
-            </div>
-            <div class="plan-card">
-                <div class="plan-info"><b>💰 ₹৫০ প্ল্যান</b><p>টকটাইম পাবেন: ৬০ মিনিট</p></div>
-                <button class="btn-buy" onclick="payUPI(50)">রিচার্জ</button>
-            </div>
+            <h4 style="margin: 0 0 10px 0;">💳 রিচার্জ প্ল্যান বোর্ড:</h4>
+            <div class="plan-card"><div><b>৳১০ প্ল্যান</b><p style="margin:2px 0 0 0;font-size:11px;">৫ মিনিট টকটাইম</p></div><button class="btn-buy" onclick="payUPI(10)">৳১০</button></div>
+            <div class="plan-card"><div><b>৳২০ প্ল্যান</b><p style="margin:2px 0 0 0;font-size:11px;">১০ মিনিট টকটাইম</p></div><button class="btn-buy" onclick="payUPI(20)">৳২০</button></div>
         </div>
     </div>
 
-    <!-- মেয়েদের ড্যাশবোর্ড -->
     <div id="girl-dashboard" class="hidden">
-        <h3>স্বাগতম, <span id="girl-name-display" style="color: var(--primary);"></span></h3>
-        <p>আপনার অনলাইন স্ট্যাটাস সেট করুন:</p>
-        <button class="btn-online" onclick="updateStatus('available')">🟢 আমি অনলাইন</button>
+        <h3>স্বাগতম হোস্টিং, <span id="girl-name-display" style="color: var(--primary);"></span></h3>
+        <p>অনলাইন থাকলে আপনার ফোনে লাইভ রিং বাজবে:</p>
+        <button class="btn-online" onclick="updateStatus('available')">🟢 আমি অনলাইন (কল আসবে)</button>
         <button class="btn-offline" onclick="updateStatus('offline')">⚫ আমি অফলাইন</button>
         <div id="girl-status-text" style="margin-top: 15px; font-weight:bold;"></div>
     </div>
 </div>
 
+<div id="call-screen" class="calling-overlay hidden">
+    <div class="avatar">❤️</div>
+    <h2 id="call-person-name" style="color: white; margin-top: 20px;">Connecting...</h2>
+    <div class="call-state" id="call-status-label">Calling...</div>
+
+    <div id="incoming-actions" class="incoming-buttons hidden">
+        <button class="btn-accept" onclick="acceptIncomingCall()">🟢 রিসিভ করুন</button>
+        <button class="btn-decline" onclick="hangUpCall()">🛑 কেটে দিন</button>
+    </div>
+
+    <div id="active-actions" style="width: 100%;">
+        <button class="btn-decline" style="border-radius: 50px; padding: 18px;" onclick="hangUpCall()">🛑 কল শেষ করুন</button>
+    </div>
+</div>
+
+<audio id="ringtone" src="https://assets.mixkit.co/active_storage/sfx/1360/1360-84.wav" loop></audio>
+
 <script>
-    let userPhone = "";
-    let userGender = "";
-    let timerInterval;
+    let myPhone = "";
+    let myGender = "";
+    let currentRoomId = "";
+    let callTimerInterval;
+    let checkIncomingInterval;
+    let balanceInterval;
     let seconds = 0;
 
     function switchTab(type) {
         if(type === 'reg') {
             document.getElementById('reg-form').classList.remove('hidden');
             document.getElementById('login-form').classList.add('hidden');
-            document.getElementById('tab-reg-btn').classList.add('active');
-            document.getElementById('tab-login-btn').classList.remove('active');
         } else {
             document.getElementById('reg-form').classList.add('hidden');
             document.getElementById('login-form').classList.remove('hidden');
-            document.getElementById('tab-reg-btn').classList.remove('active');
-            document.getElementById('tab-login-btn').classList.add('active');
         }
     }
 
@@ -186,7 +173,7 @@
         const name = document.getElementById('reg-name').value;
         const phone = document.getElementById('reg-phone').value;
         const gender = document.getElementById('reg-gender').value;
-        if(!name || !phone) { alert("সব ঘর পূরণ করুন!"); return; }
+        if(!name || !phone) return alert("সব ঘর পূরণ করুন!");
 
         const response = await fetch('/register', {
             method: 'POST',
@@ -199,8 +186,6 @@
 
     async function handleLogin() {
         const phone = document.getElementById('login-phone').value;
-        if(!phone) { alert("নম্বর দিন!"); return; }
-
         const response = await fetch('/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -211,9 +196,9 @@
     }
 
     function openDashboard(data) {
-        userPhone = data.phone; userGender = data.gender;
+        myPhone = data.phone; myGender = data.gender;
         document.getElementById('auth-section').classList.add('hidden');
-        if(userGender === 'male') {
+        if(myGender === 'male') {
             document.getElementById('boy-name-display').innerText = data.name;
             document.getElementById('balance-display').innerText = data.balance;
             document.getElementById('boy-dashboard').classList.remove('hidden');
@@ -221,6 +206,8 @@
             document.getElementById('girl-name-display').innerText = data.name;
             document.getElementById('girl-dashboard').classList.remove('hidden');
             updateStatus('available');
+            // মেয়ে অনলাইন হওয়ার সাথে সাথে ব্যাকগ্রাউন্ডে ইনকামিং কল চেক করা শুরু করবে প্রতি ৩ সেকেন্ডে
+            checkIncomingInterval = setInterval(checkIncomingCalls, 3000);
         }
     }
 
@@ -228,53 +215,135 @@
         await fetch('/update_status', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone: userPhone, status })
+            body: JSON.stringify({ phone: myPhone, status })
         });
         document.getElementById('girl-status-text').innerHTML = "স্ট্যাটাস: " + (status === 'available' ? '<span style="color:#2ed573;">অনলাইন</span>' : '<span style="color:#747d8c;">অফলাইন</span>');
     }
 
     function payUPI(amount) {
-        window.location.href = `upi://pay?pa=halder.safikul2@ybl&pn=JanuCalling&am=${amount}&cu=INR&tn=Plan_${amount}_For_${userPhone}`;
-        alert(`₹${amount} প্ল্যানের পেমেন্ট রিকোয়েস্ট পাঠানো হয়েছে। পে করার পর স্ক্রিনশট হোয়াটসঅ্যাপে পাঠান!`);
+        window.location.href = `upi://pay?pa=halder.safikul2@ybl&pn=JanuCalling&am=${amount}&cu=INR&tn=Recharge_${myPhone}`;
     }
 
-    async function connectCall() {
-        const response = await fetch('/connect_call', {
+    // 🙋‍♂️ ছেলেদের পক্ষ থেকে কল করার রিকোয়েস্ট
+    async function startInAppCall() {
+        const response = await fetch('/make_call', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone: userPhone })
+            body: JSON.stringify({ phone: myPhone })
         });
         const data = await response.json();
         
-        if(data.status === "connected") {
-            document.getElementById('balance-display').innerText = data.new_balance;
-            document.getElementById('wa-direct-link').href = data.whatsapp_link;
-            
-            // মেইন কল বাটনটি হাইড করে লাইভ কন্ট্রোল বক্সটি অন করে দেওয়া হলো
-            document.getElementById('main-call-btn').classList.add('hidden');
-            document.getElementById('live-call-box').classList.remove('hidden');
-            
-            startTimer();
-            alert(`🎉 ${data.girl_name}-এর সাথে কল রেডি! নিচে সবুজ বাটনে ক্লিক করে সরাসরি হোয়াটসঅ্যাপে কথা বলুন।`);
+        if(data.status === "ringing") {
+            currentRoomId = data.room_id;
+            document.getElementById('call-person-name').innerText = data.girl_name;
+            document.getElementById('call-status-label').innerText = "Ringing (ঘণ্টি বাজছে)...";
+            document.getElementById('incoming-actions').classList.add('hidden');
+            document.getElementById('call-screen').classList.remove('hidden');
+            document.getElementById('ringtone').play(); // কাস্টমারের ফোনেও আউটার রিং বাজবে
+
+            // প্রতি ৩ সেকেন্ড পর পর চেক করবে মেয়ে কল রিসিভ করলো কি না
+            let checkAccept = setInterval(async () => {
+                const checkRes = await fetch('/check_incoming', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: data.girl_phone })
+                });
+                const checkData = await checkRes.json();
+                // যদি ব্যাকএন্ডে কল স্ট্যাটাস 'connected' হয়ে যায় (অর্থাৎ মেয়ে রিসিভ করেছে)
+                if(!checkData.incoming) { 
+                    clearInterval(checkAccept);
+                    document.getElementById('ringtone').pause();
+                    startCallDurationTimer(); 
+                }
+            }, 3000);
         } else {
             alert(data.message);
         }
     }
 
-    function startTimer() {
+    // 🙋‍♀️ মেয়েদের ফোনে ইনকামিং কল চেক করা লুপ
+    async function checkIncomingCalls() {
+        if (document.getElementById('call-screen').classList.contains('hidden')) {
+            const response = await fetch('/check_incoming', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: myPhone })
+            });
+            const data = await response.json();
+            
+            if(data.incoming) {
+                currentRoomId = data.room_id;
+                document.getElementById('call-person-name').innerText = data.boy_name;
+                document.getElementById('call-status-label').innerText = "⚠️ ইনকামিং অ্যাপ কল...";
+                document.getElementById('incoming-actions').classList.remove('hidden');
+                document.getElementById('call-screen').classList.remove('hidden');
+                document.getElementById('ringtone').play(); // হোস্টিং মেয়ের ফোনে জোর রিংটোন বাজবে
+            }
+        }
+    }
+
+    // মেয়ে "রিসিভ করুন" বাটনে চাপ দিলে
+    async function acceptIncomingCall() {
+        document.getElementById('ringtone').pause();
+        const response = await fetch('/accept_call', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ room_id: currentRoomId })
+        });
+        const data = await response.json();
+        if(data.status === 'connected') {
+            document.getElementById('incoming-actions').classList.add('hidden');
+            startCallDurationTimer();
+        }
+    }
+
+    // ⏱️ কল চালু হওয়ার টাইমার এবং প্রতি মিনিটে ২ টাকা ব্যালেন্স কাটার লজিক
+    function startCallDurationTimer() {
         seconds = 0;
-        timerInterval = setInterval(() => {
+        document.getElementById('call-status-label').innerText = "Connected (00:00)";
+        
+        // ১. স্ক্রিন টাইমার লুপ
+        callTimerInterval = setInterval(() => {
             seconds++;
             let mins = Math.floor(seconds / 60).toString().padStart(2, '0');
             let secs = (seconds % 60).toString().padStart(2, '0');
-            document.getElementById('timer-display').innerText = `কল চালু সময় (${mins}:${secs})`;
+            document.getElementById('call-status-label').innerText = `Connected (${mins}:${secs})`;
         }, 1000);
+
+        // ২. ব্যালেন্স কাটার লুপ (প্রতি ৬০ সেকেন্ডে ২ টাকা কাটবে কাস্টমারের থেকে)
+        if(myGender === 'male') {
+            balanceInterval = setInterval(async () => {
+                const res = await fetch('/deduct_minute', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ boy_phone: myPhone, room_id: currentRoomId })
+                });
+                const data = await res.json();
+                
+                if(data.status === "success") {
+                    document.getElementById('balance-display').innerText = data.new_balance;
+                } else if(data.status === "low_balance" || data.status === "disconnected") {
+                    alert("ব্যালেন্স শেষ হওয়ার কারণে কলটি কেটে দেওয়া হলো!");
+                    hangUpCall();
+                }
+            }, 60000); // ঠিক ১ মিনিট (৬০,০০০ মিলি-সেকেন্ড) পর পর রান হবে
+        }
     }
 
-    function endCall() {
-        clearInterval(timerInterval);
-        document.getElementById('live-call-box').classList.add('hidden');
-        document.getElementById('main-call-btn').classList.remove('hidden');
+    // কল কেটে দিলে বা শেষ করলে
+    async function hangUpCall() {
+        document.getElementById('ringtone').pause();
+        document.getElementById('ringtone').currentTime = 0;
+        clearInterval(callTimerInterval);
+        clearInterval(balanceInterval);
+        
+        await fetch('/end_call', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ room_id: currentRoomId })
+        });
+
+        document.getElementById('call-screen').classList.add('hidden');
         alert("কল শেষ হয়েছে।");
     }
 </script>
