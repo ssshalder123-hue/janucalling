@@ -26,7 +26,8 @@ init_db()
 
 @app.route('/')
 def home():
-    return "<h1>Janu Calling System Backend is Running Live!</h1>"
+    return render_template('index.html')
+    
 
 # ১. রেজিস্ট্রেশন ও লগইন রুট
 @app.route('/login', methods=['POST'])
