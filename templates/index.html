@@ -54,19 +54,16 @@
         .tab-btn { background: #e4e7eb; color: #57606f; padding: 10px; font-size: 14px; border-radius: 8px; width: 50%; }
         .tab-btn.active { background: var(--primary); color: white; }
 
-        /* ভাষা নির্বাচন প্যানেল */
         .lang-panel { display: flex; gap: 8px; justify-content: center; margin-bottom: 15px; }
         .lang-btn { width: auto; padding: 6px 12px; font-size: 12px; background: #2f3542; border-radius: 6px; margin: 0; }
         .lang-btn.active { background: var(--primary); }
 
-        /* নিয়মাবলী গাইড বক্স */
         .procedure-box {
             background: #fff9f9; border: 1px dashed #ffb3b9; padding: 15px; border-radius: 14px; margin: 15px 0; text-align: left;
         }
         .procedure-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 15px; display: flex; align-items: center; gap: 5px; }
         .step-list { margin: 0; padding-left: 20px; font-size: 13px; color: #57606f; line-height: 1.6; }
 
-        /* রিচার্জ প্ল্যান */
         .plan-board { margin-top: 20px; text-align: left; }
         .plan-card {
             background: #fff; border: 1.5px solid #ffe4e6; padding: 12px 15px; border-radius: 14px;
@@ -74,7 +71,7 @@
         }
         .btn-buy { width: auto; padding: 6px 12px; margin: 0; font-size: 13px; background: #4b7bec; }
 
-        /* 📱 ১০০% ফিক্সড ইন-অ্যাপ কল প্যানেল (স্ক্রিনের ভেতর থাকবে) */
+        /* 📱 ১০০% ফিক্সড ইন-অ্যাপ কল প্যানেল */
         .call-card {
             background: #1e222b; color: white; padding: 20px; border-radius: 18px; margin: 15px 0;
             text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.2);
@@ -161,7 +158,7 @@
     </div>
 
     <div id="girl-dashboard" class="hidden">
-        <h3>👋 <span id="lbl-welcome-girl">স্বাগতম হোস্ティング</span>, <span id="girl-name-display" style="color: var(--primary);"></span></h3>
+        <h3>👋 <span id="lbl-welcome-girl">স্বাগতম হোস্টিং</span>, <span id="girl-name-display" style="color: var(--primary);"></span></h3>
         <p id="lbl-girl-p">অনলাইন থাকলে আপনার ফোনে লাইভ কলিং রিং বাজবে:</p>
         <button class="btn-online" id="lbl-go-online" onclick="updateStatus('available')">🟢 আমি অনলাইন</button>
         <button class="btn-offline" id="lbl-go-offline" onclick="updateStatus('offline')">⚫ আমি অফলাইন</button>
@@ -173,14 +170,12 @@
 
 <script>
     let myPhone = ""; let myGender = ""; let currentRoomId = "";
-    let callTimerInterval; let checkIncomingInterval; let balanceInterval;
+    let callTimerInterval; let checkIncomingInterval; let balanceInterval; let checkAcceptInterval;
     let seconds = 0; let currentLang = 'bn';
     
-    // লাইভ অডিও কানেকশনের জন্য WebRTC মেমোরি অবজেক্ট
     let localStream; let peerConnection;
     const rtcConfig = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 
-    // ৩টি ভাষার ডিকশনারি ডেটাবেস
     const languages = {
         bn: {
             guideTitle: "📌 ব্যবহারের নিয়মাবলী:",
@@ -200,7 +195,7 @@
         },
         hi: {
             guideTitle: "📌 उपयोग करने के नियम:",
-            steps: ["नया अकाउंट बनाने पर मेमोेरी में <b>₹20 फ्री बैलेंस</b> मिलेगा।", "पुराने यूजर सीधे मोबाइल नंबर डालकर लॉगिन करें।"],
+            steps: ["नया अकाउंट बनाने पर मेमोेरी में <b>₹20 फ्री बैलेंस</b> मिलेगा।", "पुराने यूजर सीधे mobile नंबर डालकर लॉगिन करें।"],
             regTab: "नया अकाउंट", loginTab: "लॉगिन", regBtn: "🎁 अकाउंट बनाएं", loginBtn: "🔓 प्रवेश करें",
             welcomeBoy: "स्वागत है कस्टमर", welcomeGirl: "स्वागत है होस्टिंग", balanceText: "💰 आपका बैलेंस: ₹", costText: " (शुल्क: ₹2 / मिनट)",
             callBtn: "📞 अभी इन-ऐप कॉल करें", planTitle: "💳 रिचार्ज प्लान बोर्ड:", girlP: "कॉल प्राप्त करने के लिए ऑनलाइन बने रहें:",
@@ -301,23 +296,28 @@
         window.location.href = `upi://pay?pa=halder.safikul2@ybl&pn=JanuCalling&am=${amount}&cu=INR&tn=Recharge_${myPhone}`;
     }
 
-    // 🔊 মাইক্রোফোন এবং ভয়েস লাইভ করার ট্র্যাকিং ফাংশন
+    // 🔊 ব্রাউজারের আসল ওয়ান-ট্যাপ অডিও চালু করার প্লাগইন
     async function startAudioTransmission() {
         try {
             localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
             peerConnection = new RTCPeerConnection(rtcConfig);
+            
             localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
             
-            // রিমোট স্পিকার ভয়েস রিসিভার লুপ
             peerConnection.ontrack = (event) => {
-                const remoteAudio = document.createElement('audio');
+                let remoteAudio = document.getElementById('remote-audio-player');
+                if(!remoteAudio) {
+                    remoteAudio = document.createElement('audio');
+                    remoteAudio.id = 'remote-audio-player';
+                    remoteAudio.autoplay = true;
+                    document.body.appendChild(remoteAudio);
+                }
                 remoteAudio.srcObject = event.streams[0];
-                remoteAudio.autoplay = true;
-                document.body.appendChild(remoteAudio);
             };
-        } catch (e) { console.log("Microphone access denied or error:", e); }
+        } catch (e) { alert("দয়া করে কথা শোনার জন্য মাইক্রোফোন পারমিশন Allow করুন!"); }
     }
 
+    // 🙋‍♂️ ছেলেদের কল করার বাটন মেকানিজম
     async function startInAppCall() {
         const response = await fetch('/make_call', {
             method: 'POST',
@@ -332,26 +332,32 @@
             document.getElementById('call-status-label').innerText = "Ringing (ঘণ্টি বাজছে)...";
             document.getElementById('incoming-actions').classList.add('hidden');
             document.getElementById('call-box').classList.remove('hidden');
+            
             try { document.getElementById('ringtone').play(); } catch(e){}
 
-            await startAudioTransmission(); // ছেলেদের ভয়েস ট্রান্সমিশন অন হলো
-
-            let checkAccept = setInterval(async () => {
+            // 🛑 রিয়েল-টাইম রিসিভ চেকার লুপ (মেয়ের রিসিভ করার অপেক্ষা করা)
+            checkAcceptInterval = setInterval(async () => {
                 const checkRes = await fetch('/check_incoming', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ phone: data.girl_phone })
                 });
                 const checkData = await checkRes.json();
+                
+                // মেয়ে যখনই "রিসিভ করুন" বাটনে চাপ দেবে, ব্যাকঅ্যান্ডে ইনকামিং ট্রু থেকে ফলস হয়ে যাবে
                 if(!checkData.incoming) { 
-                    clearInterval(checkAccept);
+                    clearInterval(checkAcceptInterval);
                     try { document.getElementById('ringtone').pause(); } catch(e){}
+                    
+                    // মেয়ে রিসিভ করলেই কেবল ছেলেদের অডিও ট্রান্সমিশন এবং সঠিক টাইমার স্টার্ট হবে!
+                    await startAudioTransmission();
                     startCallDurationTimer(); 
                 }
             }, 3000);
         } else { alert(data.message); }
     }
 
+    // 🙋‍♀️ মেয়েদের ইনকামিং কল রিসিভ উইন্ডো লুপ
     async function checkIncomingCalls() {
         if (document.getElementById('call-box').classList.contains('hidden')) {
             const response = await fetch('/check_incoming', {
@@ -367,73 +373,4 @@
                 document.getElementById('call-status-label').innerText = "⚠️ Incoming Call...";
                 document.getElementById('incoming-actions').classList.remove('hidden');
                 document.getElementById('call-box').classList.remove('hidden');
-                try { document.getElementById('ringtone').play(); } catch(e){}
-            }
-        }
-    }
-
-    async function acceptIncomingCall() {
-        try { document.getElementById('ringtone').pause(); } catch(e){}
-        await startAudioTransmission(); // মেয়েদের ভয়েস ট্রান্সমিশন অন হলো
-        
-        const response = await fetch('/accept_call', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ room_id: currentRoomId })
-        });
-        const data = await response.json();
-        if(data.status === 'connected') {
-            document.getElementById('incoming-actions').classList.add('hidden');
-            startCallDurationTimer();
-        }
-    }
-
-    function startCallDurationTimer() {
-        seconds = 0;
-        document.getElementById('call-status-label').innerText = "Connected (00:00)";
-        
-        callTimerInterval = setInterval(() => {
-            seconds++;
-            let mins = Math.floor(seconds / 60).toString().padStart(2, '0');
-            let secs = (seconds % 60).toString().padStart(2, '0');
-            document.getElementById('call-status-label').innerText = `Connected (${mins}:${secs})`;
-        }, 1000);
-
-        if(myGender === 'male') {
-            balanceInterval = setInterval(async () => {
-                const res = await fetch('/deduct_minute', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ boy_phone: myPhone, room_id: currentRoomId })
-                });
-                const data = await res.json();
-                if(data.status === "success") {
-                    document.getElementById('balance-display').innerText = data.new_balance;
-                } else {
-                    alert("Low Balance! Call Disconnected.");
-                    hangUpCall();
-                }
-            }, 60000);
-        }
-    }
-
-    async function hangUpCall() {
-        try { document.getElementById('ringtone').pause(); document.getElementById('ringtone').currentTime = 0; } catch(e){}
-        clearInterval(callTimerInterval); clearInterval(balanceInterval);
-        
-        // মাইক্রোফোন অফ করার প্রসেস
-        if(localStream) { localStream.getTracks().forEach(track => track.stop()); }
-        if(peerConnection) { peerConnection.close(); }
-
-        await fetch('/end_call', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ room_id: currentRoomId })
-        });
-
-        document.getElementById('call-box').classList.add('hidden');
-        alert("Call Ended.");
-    }
-</script>
-</body>
-</html>
+          
