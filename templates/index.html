@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Janu Calling - Premium Audio Platform</title>
+    <title>Janu Calling - Ultimate Premium Audio Platform</title>
     <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.20.0.js"></script>
     <style>
         :root {
@@ -127,27 +127,7 @@
                 <option value="male">🙋‍♂️ Male (Customer)</option>
                 <option value="female">🙋‍♀️ Female (Hosting)</option>
             </select>
-            <button class="btn-primary" onclick="registerUser()async function registerUser() {
-    const name = document.getElementById('reg-name').value;
-    const phone = document.getElementById('reg-phone').value;
-    const gender = document.getElementById('reg-gender').value;
-    
-    if(!name || !phone) return alert("Please fill all fields!");
-
-    // পাইথনের /register রাউটের সাথে সরাসরি সংযোগ
-    const response = await fetch('/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name, phone: phone, gender: gender })
-    });
-    const data = await response.json();
-    if(data.status === "success") { 
-        openDashboard(data); 
-    } else { 
-        alert(data.message); 
-    }
-                }
-                ">🎁 Create Account</button>
+            <button class="btn-primary" onclick="registerUser()">🎁 Create Account</button>
         </div>
 
         <div id="login-form" class="hidden">
@@ -304,7 +284,7 @@
             currentRoomId = data.room_id;
             document.getElementById('boy-dashboard').classList.add('hidden');
             document.getElementById('call-person-name').innerText = data.girl_name;
-            document.getElementById('call-status-label').innerText = "Ringing... / Ringing";
+            document.getElementById('call-status-label').innerText = "Ringing...";
             document.getElementById('call-box').classList.remove('hidden');
             try { document.getElementById('ringtone').play(); } catch(e){}
 
@@ -340,7 +320,7 @@
                 currentRoomId = data.room_id;
                 document.getElementById('girl-dashboard').classList.add('hidden');
                 document.getElementById('call-person-name').innerText = data.boy_name;
-                document.getElementById('call-status-label').innerText = "Incoming Voice Call...";
+                document.getElementById('call-status-label').innerText = "Incoming Audio Call...";
                 
                 document.getElementById('mute-btn').innerHTML = "🟢<span>Accept</span>";
                 document.getElementById('mute-btn').onclick = acceptIncomingCall;
@@ -417,4 +397,4 @@
             localAudioTrack.setEnabled(!isMuted);
             document.getElementById('mute-btn').classList.toggle('active', isMuted);
             document.getElementById('mute-icon').innerText = isMuted ? "🔇" : "🎙️";
- 
+  
