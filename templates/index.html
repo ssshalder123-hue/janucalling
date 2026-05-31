@@ -58,7 +58,6 @@
         .btn-login { background: var(--login-gradient); }
         .btn-online { background: var(--success-gradient); }
         .btn-offline { background: var(--offline-gradient); }
-        .btn-decline { background: linear-gradient(135deg, #ff0844 0%, #ff4e50 100%); }
 
         .hidden { display: none !important; }
         
@@ -117,7 +116,7 @@
         </div>
 
         <div class="tab-system">
-            <New Account</button>
+            <button class="tab-btn active" id="tab-reg-btn" onclick="switchTab('reg')">New Account</button>
             <button class="tab-btn" id="tab-login-btn" onclick="switchTab('login')">Login</button>
         </div>
 
@@ -125,17 +124,15 @@
             <input type="text" id="reg-name" placeholder="Enter Your Name">
             <input type="number" id="reg-phone" placeholder="Enter Phone Number">
             <select id="reg-gender">
-                <option value="male">🙋‍♂️ Male</option>
+                <option value="male">🙋‍♂️ Male (Customer)</option>
                 <option value="female">🙋‍♀️ Female (Hosting)</option>
-        
-            <button class="btn-primary" onclick="registerUser()">🎁🎁 Create Account</button>
-                
+            </select>
+            <button class="btn-primary" onclick="registerUser()">🎁 Create Account</button>
         </div>
 
         <div id="login-form" class="hidden">
             <input type="number" id="login-phone" placeholder="Enter Registered Phone Number">
-            <button class="btn-login" onclick="loginUser()">🔓 Login Now<button class="btn-login" onclick="loginUser()">🔓 Login Now</button>
-                
+            <button class="btn-login" onclick="loginUser()">🔓 Login Now</button>
         </div>
     </div>
 
@@ -287,7 +284,7 @@
             currentRoomId = data.room_id;
             document.getElementById('boy-dashboard').classList.add('hidden');
             document.getElementById('call-person-name').innerText = data.girl_name;
-            document.getElementById('call-status-label').innerText = "Ringing...";
+            document.getElementById('call-status-label').innerText = "Ringing... / Ringing";
             document.getElementById('call-box').classList.remove('hidden');
             try { document.getElementById('ringtone').play(); } catch(e){}
 
@@ -323,7 +320,7 @@
                 currentRoomId = data.room_id;
                 document.getElementById('girl-dashboard').classList.add('hidden');
                 document.getElementById('call-person-name').innerText = data.boy_name;
-                document.getElementById('call-status-label').innerText = "⚠️ Incoming Audio Call...";
+                document.getElementById('call-status-label').innerText = "Incoming Voice Call...";
                 
                 document.getElementById('mute-btn').innerHTML = "🟢<span>Accept</span>";
                 document.getElementById('mute-btn').onclick = acceptIncomingCall;
@@ -399,4 +396,5 @@
         if(localAudioTrack) {
             localAudioTrack.setEnabled(!isMuted);
             document.getElementById('mute-btn').classList.toggle('active', isMuted);
-     
+            document.getElementById('mute-icon').innerText = isMuted ? "🔇" : "🎙️";
+ 
