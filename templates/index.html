@@ -206,12 +206,12 @@
         const name = document.getElementById('reg-name').value;
         const phone = document.getElementById('reg-phone').value;
         const gender = document.getElementById('reg-gender').value;
-        if(!name || !phone) return alert("Please fill all configuration fields!");
+        if(!name || !phone) return alert("Please fill all inputs!");
 
         const response = await fetch('/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, phone, gender })
+            body: JSON.stringify({ name: name, phone: phone, gender: gender })
         });
         const data = await response.json();
         if(data.status === "success") { openDashboard(data); } else { alert(data.message); }
@@ -219,11 +219,11 @@
 
     async function loginUser() {
         const phone = document.getElementById('login-phone').value;
-        if(!phone) return alert("Please type your mobile number!");
+        if(!phone) return alert("Please enter phone number!");
         const response = await fetch('/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone })
+            body: JSON.stringify({ phone: phone })
         });
         const data = await response.json();
         if(data.status === "success") { openDashboard(data); } else { alert(data.message); }
@@ -248,7 +248,7 @@
         await fetch('/update_status', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone: myPhone, status })
+            body: JSON.stringify({ phone: myPhone, status: status })
         });
         document.getElementById('girl-status-text').innerHTML = status === 'available' ? '<span style="color:#00b09b;">STATUS: ONLINE</span>' : '<span style="color:#747d8c;">STATUS: OFFLINE</span>';
     }
@@ -396,5 +396,4 @@
         if(localAudioTrack) {
             localAudioTrack.setEnabled(!isMuted);
             document.getElementById('mute-btn').classList.toggle('active', isMuted);
-            document.getElementById('mute-icon').innerText = isMuted ? "🔇" : "🎙️";
-  
+            document.getElementById('mute-icon').innerText = isMuted ?
