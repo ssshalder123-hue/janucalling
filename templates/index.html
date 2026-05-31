@@ -1,88 +1,24 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<button onclick="registerUser()">Register</button>
 
-<title>Janu Dating App</title>
+<script>
+async function registerUser() {
 
-<style>
-body{
-    margin:0;
-    background:#f8b6c5;
-    font-family:Arial,sans-serif;
+const response = await fetch('/register',{
+ method:'POST',
+ headers:{
+   'Content-Type':'application/json'
+ },
+ body:JSON.stringify({
+   name:'Rahim',
+   phone:'9876543210',
+   gender:'Male',
+   password:'123456'
+ })
+});
+
+const result = await response.json();
+
+alert(result.message);
+
 }
-
-.container{
-    width:90%;
-    max-width:400px;
-    background:#fff;
-    margin:50px auto;
-    padding:20px;
-    border-radius:20px;
-    box-shadow:0 0 15px rgba(0,0,0,0.2);
-}
-
-h2{
-    text-align:center;
-    color:#ff3366;
-}
-
-input,select{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    box-sizing:border-box;
-}
-
-button{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    border:none;
-    border-radius:10px;
-    background:#222;
-    color:white;
-    font-size:16px;
-}
-
-.call-btn{
-    background:#28a745;
-}
-
-.video-btn{
-    background:#007bff;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<h2>❤️ Janu Dating App ❤️</h2>
-
-<input type="text" placeholder="Full Name">
-
-<input type="tel" placeholder="Phone Number">
-
-<select>
-<option>Male</option>
-<option>Female</option>
-<option>Other</option>
-</select>
-
-<input type="password" placeholder="Password">
-
-<button>Login Now</button>
-
-<button class="call-btn">📞 Voice Call</button>
-
-<button class="video-btn">🎥 Video Call</button>
-
-</div>
-
-</body>
-</html>
+</script>
