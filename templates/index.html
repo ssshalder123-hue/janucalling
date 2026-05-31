@@ -127,7 +127,27 @@
                 <option value="male">🙋‍♂️ Male (Customer)</option>
                 <option value="female">🙋‍♀️ Female (Hosting)</option>
             </select>
-            <button class="btn-primary" onclick="registerUser()">🎁 Create Account</button>
+            <button class="btn-primary" onclick="registerUser()async function registerUser() {
+    const name = document.getElementById('reg-name').value;
+    const phone = document.getElementById('reg-phone').value;
+    const gender = document.getElementById('reg-gender').value;
+    
+    if(!name || !phone) return alert("Please fill all fields!");
+
+    // পাইথনের /register রাউটের সাথে সরাসরি সংযোগ
+    const response = await fetch('/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name, phone: phone, gender: gender })
+    });
+    const data = await response.json();
+    if(data.status === "success") { 
+        openDashboard(data); 
+    } else { 
+        alert(data.message); 
+    }
+                }
+                ">🎁 Create Account</button>
         </div>
 
         <div id="login-form" class="hidden">
