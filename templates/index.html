@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Janu Calling - Ultimate Premium Audio Platform</title>
+    <title>Janu Calling - Official English Dashboard</title>
     <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.20.0.js"></script>
     <style>
         :root {
@@ -320,7 +320,7 @@
                 currentRoomId = data.room_id;
                 document.getElementById('girl-dashboard').classList.add('hidden');
                 document.getElementById('call-person-name').innerText = data.boy_name;
-                document.getElementById('call-status-label').innerText = "Incoming Audio Call...";
+                document.getElementById('call-status-label').innerText = "Incoming Call...";
                 
                 document.getElementById('mute-btn').innerHTML = "🟢<span>Accept</span>";
                 document.getElementById('mute-btn').onclick = acceptIncomingCall;
@@ -396,4 +396,4 @@
         if(localAudioTrack) {
             localAudioTrack.setEnabled(!isMuted);
             document.getElementById('mute-btn').classList.toggle('active', isMuted);
-            document.getElementById('mute-icon').innerText = isMuted ?
+            document.getElementById('mute-icon').innerText = isMuted ? "🔇" : "🎙
