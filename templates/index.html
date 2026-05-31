@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Janu Calling - Professional Multi-Lang & Audio</title>
-    <!-- Agora Audio Web SDK (আসল ও পরিষ্কার কথা শোনার জন্য অফিশিয়াল লাইব্রেরি) -->
+    <title>Janu Calling - Premium Audio Platform</title>
     <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.20.0.js"></script>
     <style>
         :root {
@@ -69,29 +68,21 @@
         .tab-btn { background: rgba(0,0,0,0.04); color: #57606f; padding: 11px; font-size: 14px; border-radius: 10px; width: 50%; }
         .tab-btn.active { background: var(--primary-gradient); color: white; }
 
-        /* ৩টি ভাষার বাটন প্যানেল */
-        .lang-panel { display: flex; gap: 8px; justify-content: center; margin-bottom: 15px; }
-        .lang-btn { width: auto; padding: 6px 12px; font-size: 12px; background: #2f3542; border-radius: 6px; margin: 0; }
-        .lang-btn.active { background: linear-gradient(135deg, #ff0844 0%, #ff4e50 100%); }
-
-        /* ব্যবহারের নিয়মাবলী গাইড বক্স */
         .procedure-box { background: #fff9f9; border: 1px dashed #ffb3b9; padding: 15px; border-radius: 14px; margin: 15px 0; text-align: left; }
         .procedure-box h4 { margin: 0 0 10px 0; color: #ff0844; font-size: 15px; }
         .step-list { margin: 0; padding-left: 20px; font-size: 13px; color: #57606f; line-height: 1.6; }
 
-        /* রিচার্জ প্ল্যান বোর্ড */
         .plan-board { margin-top: 20px; text-align: left; }
         .plan-card { background: #fff; border: 1.5px solid #ffe4e6; padding: 12px 15px; border-radius: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .btn-buy { width: auto; padding: 6px 12px; margin: 0; font-size: 13px; background: #4b7bec; }
 
-        /* 📱 প্রফেশনাল ইন-অ্যাপ কল কার্ড */
         .call-card {
             background: #14171f; color: white; padding: 30px 20px; border-radius: 24px; margin: 15px 0;
             text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05);
         }
         .avatar { width: 80px; height: 80px; background: var(--primary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 34px; margin: 0 auto 15px auto; animation: ripple 1.5s infinite; }
-        
-        /* বৃত্তাকার কল কন্ট্রোল বাটন প্যানেল */
+        .call-state { font-size: 14px; color: #a4b0be; margin: 5px 0 20px 0; font-weight: 500; }
+
         .control-panel { display: flex; justify-content: center; gap: 20px; margin-top: 20px; width: 100%; }
         .round-btn {
             width: 55px; height: 55px; border-radius: 50%; background: rgba(255,255,255,0.1);
@@ -114,47 +105,38 @@
 
 <div class="container">
     <h2>❤️ Janu Calling App ❤️</h2>
-
-    <!-- ভাষা সিলেক্ট প্যানেল -->
-    <div class="lang-panel">
-        <button class="lang-btn active" id="lang-bn" onclick="changeLang('bn')">বাঙালী</button>
-        <button class="lang-btn" id="lang-en" onclick="changeLang('en')">English</button>
-        <button class="lang-btn" id="lang-hi" onclick="changeLang('hi')">हिंदी</button>
-    </div>
     <hr>
 
-    <!-- ১. লগইন/রেজিস্ট্রেশন সেকশন -->
     <div id="auth-section">
         <div class="procedure-box">
-            <h4 id="guide-title">📌 ব্যবহারের নিয়মাবলী:</h4>
-            <ol class="step-list" id="guide-steps">
-                <li>নতুন অ্যাকাউন্ট খুললে মেমোরিতে <b>৳২০ ফ্রি ব্যালেন্স</b> পাবেন।</li>
-                <li>পুরোনো ইউজার হলে সরাসরি মোবাইল নম্বর দিয়ে লগইন করুন।</li>
+            <h4>📌 App Usage Guidelines:</h4>
+            <ol class="step-list">
+                <li>New users register to get <b>₹20 FREE welcome balance</b> instantly.</li>
+                <li>Existing users login directly via registered phone number.</li>
             </ol>
         </div>
 
         <div class="tab-system">
-            <button class="tab-btn active" id="tab-reg-btn" onclick="switchTab('reg')">নতুন অ্যাকাউন্ট</button>
-            <button class="tab-btn" id="tab-login-btn" onclick="switchTab('login')">লগইন</button>
+            <button class="tab-btn active" id="tab-reg-btn" onclick="switchTab('reg')">New Account</button>
+            <button class="tab-btn" id="tab-login-btn" onclick="switchTab('login')">Login</button>
         </div>
 
         <div id="reg-form">
-            <input type="text" id="reg-name" placeholder="আপনার নাম / Name">
-            <input type="number" id="reg-phone" placeholder="মোবাইল নম্বর / Mobile Number">
+            <input type="text" id="reg-name" placeholder="Enter Your Name">
+            <input type="number" id="reg-phone" placeholder="Enter Phone Number">
             <select id="reg-gender">
-                <option value="male">🙋‍♂️ আমি একজন ছেলে (Customer)</option>
-                <option value="female">🙋‍♀️ আমি একজন মেয়ে (Hosting)</option>
+                <option value="male">🙋‍♂️ Male (Customer)</option>
+                <option value="female">🙋‍♀️ Female (Hosting)</option>
             </select>
-            <button class="btn-primary" id="reg-submit-btn" onclick="handleRegister()">🎁 অ্যাকাউন্ট তৈরি করুন</button>
+            <button class="btn-primary" onclick="registerUser()">🎁 Create Account</button>
         </div>
 
         <div id="login-form" class="hidden">
-            <input type="number" id="login-phone" placeholder="আপনার রেজিস্টার্ড মোবাইল নম্বর">
-            <button class="btn-login" id="login-submit-btn" onclick="handleLogin()">🔓 প্রবেশ করুন</button>
+            <input type="number" id="login-phone" placeholder="Enter Registered Phone Number">
+            <button class="btn-login" onclick="loginUser()">🔓 Login Now</button>
         </div>
     </div>
 
-    <!-- 📱 প্রফেশনাল ইন-অ্যাপ লাইভ কল প্যানেল (বৃত্তাকার ৩টি বাটন ছাড়া অতিরিক্ত বাটন নেই) -->
     <div id="call-box" class="call-card hidden">
         <div class="avatar">❤️</div>
         <h3 id="call-person-name" style="color: white; margin: 0;">Connecting...</h3>
@@ -173,28 +155,25 @@
         </div>
     </div>
 
-    <!-- ২. কাস্টমার (ছেলেদের) ড্যাশবোর্ড -->
     <div id="boy-dashboard" class="hidden">
-        <h3>👋 <span id="lbl-welcome-boy">স্বাগতম কাস্টমার</span>, <span id="boy-name-display" style="color: #ff0844;"></span></h3>
-        <div class="status-box" id="boy-balance-box">💰 আপনার ব্যালেন্স: ৳<span id="balance-display">0</span> (খরচ: ৳২ / মিনিট)</div>
+        <h3>👋 Welcome, <span id="boy-name-display" style="color: #ff0844;"></span></h3>
+        <div class="status-box">💰 Wallet Balance: ₹<span id="balance-display">0</span> (Rate: ₹2 / Min)</div>
         
-        <button class="btn-online" id="lbl-call-btn" onclick="startInAppCall()">📞 এখনই ইন-অ্যাপ কল করুন</button>
+        <button class="btn-online" id="boy-call-action-btn" onclick="startInAppCall()">📞 Start Audio Call</button>
         
-        <!-- ৩টি স্পেশাল রিচার্জ প্ল্যান বোর্ড -->
         <div class="plan-board">
-            <h4 id="lbl-plan-title">💳 রিচার্জ প্ল্যান বোর্ড:</h4>
-            <div class="plan-card"><div><b>৳১০ প্ল্যান</b><p style="margin:2px 0 0 0;font-size:11px;">৫ মিনিট টকটাইম</p></div><button class="btn-buy" onclick="payUPI(10)">৳১০</button></div>
-            <div class="plan-card"><div><b>৳২০ প্ল্যান</b><p style="margin:2px 0 0 0;font-size:11px;">১০ মিনিট টকটাইম</p></div><button class="btn-buy" onclick="payUPI(20)">৳২০</button></div>
-            <div class="plan-card"><div><b>৳৫০ প্ল্যান</b><p style="margin:2px 0 0 0;font-size:11px;">২৫ মিনিট টকটাইম</p></div><button class="btn-buy" onclick="payUPI(50)">৳৫০</button></div>
+            <h4>💳 Instant Recharge Plans:</h4>
+            <div class="plan-card"><div><b>₹10 Package</b><p style="margin:2px 0 0 0;font-size:11px;">5 Minutes Voice Talktime</p></div><button class="btn-buy" onclick="payUPI(10)">₹10</button></div>
+            <div class="plan-card"><div><b>₹20 Package</b><p style="margin:2px 0 0 0;font-size:11px;">10 Minutes Voice Talktime</p></div><button class="btn-buy" onclick="payUPI(20)">₹20</button></div>
+            <div class="plan-card"><div><b>₹50 Package</b><p style="margin:2px 0 0 0;font-size:11px;">25 Minutes Voice Talktime</p></div><button class="btn-buy" onclick="payUPI(50)">₹50</button></div>
         </div>
     </div>
 
-    <!-- ৩. হোস্টিং (মেয়েদের) ড্যাশবোর্ড -->
     <div id="girl-dashboard" class="hidden">
-        <h3>👋 <span id="lbl-welcome-girl">স্বাগতম হোস্ティング</span>, <span id="girl-name-display" style="color: #ff0844;"></span></h3>
-        <p id="lbl-girl-p" style="color: #57606f; text-align: center; font-weight: 500;">অনলাইন থাকলে আপনার ফোনে লাইভ কল আসবে:</p>
-        <button class="btn-online" id="lbl-go-online" onclick="updateStatus('available')">🟢 অনলাইন যান</button>
-        <button class="btn-offline" id="lbl-go-offline" onclick="updateStatus('offline')">⚫ অফলাইন যান</button>
+        <h3>👋 Welcome Hosting, <span id="girl-name-display" style="color: #ff0844;"></span></h3>
+        <p style="color: #57606f; text-align: center; font-weight: 500;">Set status online to receive incoming audio calls:</p>
+        <button class="btn-online" id="girl-online-btn" onclick="updateStatus('available')">🟢 Go Online</button>
+        <button class="btn-offline" id="girl-offline-btn" onclick="updateStatus('offline')">⚫ Go Offline</button>
         <div id="girl-status-text" style="margin-top: 15px; font-weight:bold; text-align: center;"></div>
     </div>
 </div>
@@ -204,58 +183,11 @@
 <script>
     let myPhone = ""; let myGender = ""; let currentRoomId = "";
     let callTimerInterval; let checkIncomingInterval; let balanceInterval; let checkAcceptInterval; let syncInterval;
-    let seconds = 0; let isMuted = false; let isSpeaker = false; let currentLang = 'bn';
+    let seconds = 0; let isMuted = false; let isSpeaker = false;
     
-    // Agora অডিও ক্লায়েন্ট সেটআপ (উচ্চ মানের ক্লিয়ার অডিওর জন্য)
     let agoraClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
     let localAudioTrack = null; let remoteAudioTrack = null;
-    const AGORA_APP_ID = "99042b7818e64c39b8823f6eb7cbccdb"; // তোমার গ্লোবাল ফ্রি অ্যাপ আইডি টেস্ট ট্র্যাক
-
-    // ৩টি ভাষার ডেটা ডিকশনারি
-    const languages = {
-        bn: {
-            guideTitle: "📌 ব্যবহারের নিয়মাবলী:",
-            steps: ["নতুন অ্যাকাউন্ট খুললে মেমোরিতে <b>৳২০ ফ্রি ব্যালেন্স</b> পাবেন।", "পুরোনো ইউজার হলে সরাসরি মোবাইল নম্বর দিয়ে লগইন করুন।"],
-            regTab: "নতুন অ্যাকাউন্ট", loginTab: "লগইন", regBtn: "🎁 অ্যাকাউন্ট তৈরি করুন", loginBtn: "🔓 প্রবেশ করুন",
-            welcomeBoy: "স্বাগতম কাস্টমার", welcomeGirl: "স্বাগতম হোস্টিং", planTitle: "💳 রিচার্জ প্ল্যান বোর্ড:", girlP: "অনলাইন থাকলে আপনার ফোনে লাইভ কল আসবে:",
-            goOnline: "🟢 অনলাইন যান", goOffline: "⚫ অফলাইন যান", callBtn: "📞 এখনই ইন-অ্যাপ কল করুন"
-        },
-        en: {
-            guideTitle: "📌 Usage Guidelines:",
-            steps: ["New accounts get <b>₹20 FREE balance</b> automatically.", "Existing users can login directly using phone number."],
-            regTab: "New Account", loginTab: "Login", regBtn: "🎁 Create Account", loginBtn: "🔓 Enter App",
-            welcomeBoy: "Welcome Customer", welcomeGirl: "Welcome Hosting", planTitle: "💳 Recharge Plan Board:", girlP: "Stay online to receive live audio calls:",
-            goOnline: "🟢 Go Online", goOffline: "⚫ Go Offline", callBtn: "📞 Call In-App Now"
-        },
-        hi: {
-            guideTitle: "📌 उपयोग करने के नियम:",
-            steps: ["नया अकाउंट बनाने पर मेमोेरी में <b>₹20 फ्री बैलेंस</b> मिलेगा।", "पुराने यूजर सीधे मोबाइल नंबर डालकर लॉगिन करें।"],
-            regTab: "नया अकाउंट", loginTab: "लॉगिन", regBtn: "🎁 अकाउंट बनाएं", loginBtn: "🔓 प्रवेश करें",
-            welcomeBoy: "स्वागत है कस्टमर", welcomeGirl: "स्वागत है होस्टिंग", planTitle: "💳 रिचार्ज प्लान बोर्ड:", girlP: "कॉल प्राप्त करने के लिए ऑनलाइन बने रहें:",
-            goOnline: "🟢 ऑनलाइन जाएँ", goOffline: "⚫ ऑफलाइन जाएँ", callBtn: "📞 अभी इन-ऐप कॉल करें"
-        }
-    };
-
-    function changeLang(lang) {
-        currentLang = lang;
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(`lang-${lang}`).classList.add('active');
-        
-        const data = languages[lang];
-        document.getElementById('guide-title').innerText = data.guideTitle;
-        document.getElementById('guide-steps').innerHTML = data.steps.map(s => `<li>${s}</li>`).join('');
-        document.getElementById('tab-reg-btn').innerText = data.regTab;
-        document.getElementById('tab-login-btn').innerText = data.loginTab;
-        document.getElementById('reg-submit-btn').innerText = data.regBtn;
-        document.getElementById('login-submit-btn').innerText = data.loginBtn;
-        document.getElementById('lbl-welcome-boy').innerText = data.welcomeBoy;
-        document.getElementById('lbl-welcome-girl').innerText = data.welcomeGirl;
-        document.getElementById('lbl-plan-title').innerText = data.planTitle;
-        document.getElementById('lbl-girl-p').innerText = data.girlP;
-        document.getElementById('lbl-go-online').innerText = data.goOnline;
-        document.getElementById('lbl-go-offline').innerText = data.goOffline;
-        document.getElementById('lbl-call-btn').innerText = data.callBtn;
-    }
+    const AGORA_APP_ID = "99042b7818e64c39b8823f6eb7cbccdb";
 
     function switchTab(type) {
         if(type === 'reg') {
@@ -271,11 +203,11 @@
         }
     }
 
-    async function handleRegister() {
+    async function registerUser() {
         const name = document.getElementById('reg-name').value;
         const phone = document.getElementById('reg-phone').value;
         const gender = document.getElementById('reg-gender').value;
-        if(!name || !phone) return alert("সব তথ্য পূরণ করুন!");
+        if(!name || !phone) return alert("Please fill all configuration fields!");
 
         const response = await fetch('/register', {
             method: 'POST',
@@ -286,9 +218,9 @@
         if(data.status === "success") { openDashboard(data); } else { alert(data.message); }
     }
 
-    async function handleLogin() {
+    async function loginUser() {
         const phone = document.getElementById('login-phone').value;
-        if(!phone) return alert("নম্বর দিন!");
+        if(!phone) return alert("Please type your mobile number!");
         const response = await fetch('/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -319,14 +251,28 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ phone: myPhone, status })
         });
-        document.getElementById('girl-status-text').innerHTML = status === 'available' ? '<span style="color:#00b09b;">ONLINE</span>' : '<span style="color:#747d8c;">OFFLINE</span>';
+        document.getElementById('girl-status-text').innerHTML = status === 'available' ? '<span style="color:#00b09b;">STATUS: ONLINE</span>' : '<span style="color:#747d8c;">STATUS: OFFLINE</span>';
     }
 
     function payUPI(amount) {
         window.location.href = `upi://pay?pa=halder.safikul2@ybl&pn=JanuCalling&am=${amount}&cu=INR&tn=Recharge_${myPhone}`;
     }
 
-    // 🙋‍♂️ কাস্টমার কল মেকানিজম
+    async function setupAgoraAudio(channelName) {
+        try {
+            agoraClient.on("user-published", async (user, mediaType) => {
+                await agoraClient.subscribe(user, mediaType);
+                if (mediaType === "audio") {
+                    remoteAudioTrack = user.audioTrack;
+                    remoteAudioTrack.play();
+                }
+            });
+            await agoraClient.join(AGORA_APP_ID, channelName, null, null);
+            localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+            await agoraClient.publish([localAudioTrack]);
+        } catch (err) { console.error("Agora Error:", err); }
+    }
+
     async function startInAppCall() {
         const response = await fetch('/make_call', {
             method: 'POST',
@@ -337,10 +283,9 @@
         
         if(data.status === "ringing") {
             currentRoomId = data.room_id;
-            
             document.getElementById('boy-dashboard').classList.add('hidden');
             document.getElementById('call-person-name').innerText = data.girl_name;
-            document.getElementById('call-status-label').innerText = "Ringing (ঘণ্টি বাজছে)...";
+            document.getElementById('call-status-label').innerText = "Ringing...";
             document.getElementById('call-box').classList.remove('hidden');
             try { document.getElementById('ringtone').play(); } catch(e){}
 
@@ -353,18 +298,103 @@
                     body: JSON.stringify({ phone: data.girl_phone })
                 });
                 const checkData = await checkRes.json();
-                
-                // মেয়ে রিসিভ করলেই কেবল কথা বলা কানেক্ট হবে
                 if(!checkData.incoming) { 
                     clearInterval(checkAcceptInterval);
                     try { document.getElementById('ringtone').pause(); } catch(e){}
-                    setupAgoraAudio(currentRoomId);
+                    await setupAgoraAudio(currentRoomId);
                     startCallDurationTimer(); 
                 }
             }, 3000);
         } else { alert(data.message); }
     }
 
-    // 🙋‍♀️ মেয়েদের ইনকামিং প্যানেল
     async function checkIncomingCalls() {
-        if 
+        if (document.getElementById('call-box').classList.contains('hidden')) {
+            const response = await fetch('/check_incoming', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: myPhone })
+            });
+            const data = await response.json();
+            
+            if(data.incoming) {
+                currentRoomId = data.room_id;
+                document.getElementById('girl-dashboard').classList.add('hidden');
+                document.getElementById('call-person-name').innerText = data.boy_name;
+                document.getElementById('call-status-label').innerText = "⚠️ Incoming Audio Call...";
+                
+                document.getElementById('mute-btn').innerHTML = "🟢<span>Accept</span>";
+                document.getElementById('mute-btn').onclick = acceptIncomingCall;
+                document.getElementById('speaker-btn').innerHTML = "🛑<span>Decline</span>";
+                document.getElementById('speaker-btn').onclick = hangUpCall;
+                
+                document.getElementById('call-box').classList.remove('hidden');
+                try { document.getElementById('ringtone').play(); } catch(e){}
+
+                syncInterval = setInterval(checkCallSyncStatus, 2000);
+            }
+        }
+    }
+
+    async function acceptIncomingCall() {
+        try { document.getElementById('ringtone').pause(); } catch(e){}
+        document.getElementById('mute-btn').innerHTML = "<span id='mute-icon'>🎙️</span><span>Mute</span>";
+        document.getElementById('mute-btn').onclick = toggleMute;
+        document.getElementById('speaker-btn').innerHTML = "<span id='speaker-icon'>🔊</span><span>Speaker</span>";
+        document.getElementById('speaker-btn').onclick = toggleSpeaker;
+        
+        await setupAgoraAudio(currentRoomId);
+        
+        const response = await fetch('/accept_call', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ room_id: currentRoomId })
+        });
+        const data = await response.json();
+        if(data.status === 'connected') { startCallDurationTimer(); }
+    }
+
+    async function checkCallSyncStatus() {
+        if (!currentRoomId) return;
+        const response = await fetch('/check_incoming', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone: myPhone })
+        });
+        if (response.status === 404 || currentRoomId === "") { cleanUpCallUI(); }
+    }
+
+    function startCallDurationTimer() {
+        if(callTimerInterval) clearInterval(callTimerInterval);
+        if(balanceInterval) clearInterval(balanceInterval);
+        seconds = 0;
+        document.getElementById('call-status-label').innerText = "Connected (00:00)";
+        
+        callTimerInterval = setInterval(() => {
+            seconds++;
+            let mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+            let secs = (seconds % 60).toString().padStart(2, '0');
+            document.getElementById('call-status-label').innerText = `Connected (${mins}:${secs})`;
+        }, 1000);
+
+        if(myGender === 'male') {
+            balanceInterval = setInterval(async () => {
+                const res = await fetch('/deduct_minute', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ boy_phone: myPhone, room_id: currentRoomId })
+                });
+                const data = await res.json();
+                if(data.status === "success") {
+                    document.getElementById('balance-display').innerText = data.new_balance;
+                } else { hangUpCall(); }
+            }, 60000); 
+        }
+    }
+
+    function toggleMute() {
+        isMuted = !isMuted;
+        if(localAudioTrack) {
+            localAudioTrack.setEnabled(!isMuted);
+            document.getElementById('mute-btn').classList.toggle('active', isMuted);
+     
