@@ -211,6 +211,7 @@
         }
     }
 
+    // 📡 ফিক্সড রেজিস্ট্রেশন ব্যাকগ্রাউন্ড কানেকশন বাটন ফাংশন
     async function registerUser() {
         const name = document.getElementById('reg-name').value;
         const phone = document.getElementById('reg-phone').value;
@@ -226,6 +227,7 @@
         if(data.status === "success") { openDashboard(data); } else { alert(data.message); }
     }
 
+    // 📡 ফিক্সড লগইন ব্যাকগ্রাউন্ড কানেকশন বাটন ফাংশন
     async function loginUser() {
         const phone = document.getElementById('login-phone').value;
         if(!phone) return alert("Please fill your registered phone number!");
@@ -358,8 +360,4 @@
         document.getElementById('speaker-btn').innerHTML = "<span id='speaker-icon'>🔊</span><span>Speaker</span>";
         document.getElementById('speaker-btn').onclick = toggleSpeaker;
         
-        await setupAgoraAudio(currentRoomId);
-        
-        const response = await fetch('/accept_call', {
-            method: 'POST',
-            hea
+        await setupAgoraAudio(curre
