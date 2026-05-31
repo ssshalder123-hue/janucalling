@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Janu Calling - Exclusive Audio Dating Platform</title>
+    <!-- Agora Official SDK for Crystal Clear Voice Quality -->
     <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.20.0.js"></script>
     <style>
         :root {
@@ -24,7 +25,6 @@
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* 🌆 আল্ট্রা-মডার্ন ডার্ক নিয়ন কার্ড কন্টেইনার */
         .container { 
             max-width: 410px; width: 100%; background: var(--card-bg); 
             backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
@@ -51,7 +51,6 @@
         }
         input:focus { border-color: var(--accent-neon); outline: none; box-shadow: var(--neon-glow); background: rgba(11, 14, 20, 0.9); }
 
-        /* 🔥 গ্লোয়িং অ্যাকশন বাটনস */
         button { 
             width: 100%; padding: 15px; margin: 10px 0; border-radius: 14px; color: white; 
             font-size: 16px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s ease;
@@ -62,27 +61,22 @@
         .btn-neon-pink { background: linear-gradient(135deg, #ff2a5f 0%, #ff758c 100%); box-shadow: var(--neon-glow); }
         .btn-neon-blue { background: linear-gradient(135deg, #0072ff 0%, #00f2fe 100%); box-shadow: var(--success-glow); }
         .btn-neon-dark { background: linear-gradient(135deg, #232526 0%, #414345 100%); border: 1px solid rgba(255,255,255,0.1); }
-        .btn-neon-outline { background: transparent; border: 1px solid var(--accent-neon); color: var(--accent-neon); }
 
         .hidden { display: none !important; }
-        
         .status-badge { padding: 14px; margin: 15px 0; border-radius: 14px; font-weight: 700; background: rgba(0, 242, 254, 0.1); color: var(--success-neon); text-align: center; border: 1px solid rgba(0, 242, 254, 0.2); text-shadow: 0 0 5px rgba(0,242,254,0.3); }
 
-        /* 🎛️ আধুনিক লগইন/রেজিস্ট্রেশন ট্যাব */
         .tab-bar { display: flex; gap: 10px; margin-bottom: 20px; background: rgba(0,0,0,0.2); padding: 5px; border-radius: 12px; }
-        .tab-item { background: transparent; color: var(--text-sub); padding: 10px; font-size: 14px; border-radius: 10px; width: 50%; margin: 0; }
+        .tab-item { background: transparent; color: var(--text-sub); padding: 10px; font-size: 14px; border-radius: 10px; width: 50%; margin: 0; border: none; cursor: pointer; font-weight: bold; }
         .tab-item.active { background: linear-gradient(135deg, #ff2a5f 0%, #ff758c 100%); color: white; box-shadow: var(--neon-glow); }
 
         .guide-card { background: rgba(255, 42, 95, 0.05); border: 1px dashed rgba(255, 42, 95, 0.3); padding: 15px; border-radius: 14px; margin-bottom: 20px; }
         .guide-card h4 { margin: 0 0 8px 0; color: var(--accent-neon); font-size: 14px; text-shadow: var(--neon-glow); }
         .guide-steps { margin: 0; padding-left: 18px; font-size: 13px; color: var(--text-sub); line-height: 1.6; }
 
-        /* 💎 রিচার্জ এবং ভিআইপি প্ল্যান এরিয়া */
         .plan-section { margin-top: 25px; }
         .plan-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 14px 16px; border-radius: 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         .btn-pay-action { width: auto; padding: 8px 16px; margin: 0; font-size: 13px; background: linear-gradient(135deg, #0072ff, #00f2fe); box-shadow: var(--success-glow); }
 
-        /* 📲 ৬ নং পেজ - লাইভ কলিং ও নোটিফিকেশন সিস্টেম */
         .live-call-container {
             background: #090c10; border: 1px solid rgba(255, 255, 255, 0.08); padding: 35px 20px; border-radius: 24px; margin: 15px 0;
             text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.5);
@@ -100,7 +94,6 @@
         .circle-action-btn.active { background: var(--text-main); color: var(--dark-bg); }
         .circle-action-btn.active span { color: var(--dark-bg); }
         
-        /* ৬ নং স্ক্রিনের রিসিভ এবং এন্ড কল স্পেশাল বাটন */
         .circle-action-btn.btn-accept-call { background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%); box-shadow: var(--success-glow); }
         .circle-action-btn.btn-decline-call { background: linear-gradient(135deg, #ff0844 0%, #ff4e50 100%); box-shadow: var(--neon-glow); }
 
@@ -118,6 +111,7 @@
     <div class="tagline">Premium Audio Dating & Hosting Platform</div>
     <hr>
 
+    <!-- 🔐 ১. লগইন ও রেজিস্ট্রেশন পেজ -->
     <div id="auth-section">
         <div class="guide-card">
             <h4>🎁 New User Offer!</h4>
@@ -148,6 +142,7 @@
         </div>
     </div>
 
+    <!-- 📲 ২. লাইভ কলিং ও নোটিফিকেশন ইন্টারফেস -->
     <div id="call-box" class="live-call-container hidden">
         <div class="call-avatar-glow">📞</div>
         <h3 id="call-person-name" style="color: white; margin: 0; font-size: 22px;">Connecting...</h3>
@@ -166,6 +161,7 @@
         </div>
     </div>
 
+    <!-- 🙋‍♂️ ৩. মেল ইউজার ড্যাশবোর্ড -->
     <div id="boy-dashboard" class="hidden">
         <h3>Welcome, <span id="boy-name-display" style="color: var(--accent-neon);"></span> 👋</h3>
         <div class="status-badge">💰 Wallet Balance: ₹<span id="balance-display">0</span> (Rate: ₹2/min)</div>
@@ -180,6 +176,7 @@
         </div>
     </div>
 
+    <!-- 🙋‍♀️ ৪. ফিমেল হোস্টিং ড্যাশবোর্ড -->
     <div id="girl-dashboard" class="hidden">
         <h3>Host Verified: <span id="girl-name-display" style="color: var(--accent-neon);"></span> ✨</h3>
         <p style="color: var(--text-sub); text-align: center; font-size: 14px;">Turn status Online to auto-receive incoming call requests from users:</p>
@@ -198,7 +195,7 @@
     
     let agoraClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
     let localAudioTrack = null; let remoteAudioTrack = null;
-    const AGORA_APP_ID = "99042b7818e64c39b8823f6eb7cbccdb"; // Stable Agora Voice Engine ID
+    const AGORA_APP_ID = "99042b7818e64c39b8823f6eb7cbccdb";
 
     function toggleAuthTab(type) {
         if(type === 'reg') {
@@ -334,7 +331,6 @@
                 document.getElementById('call-person-name').innerText = data.boy_name;
                 document.getElementById('call-status-label').innerText = "Incoming Audio Call Request...";
                 
-                // ৬ নং স্ক্রিন স্পেশাল গ্রীন এক্সেপ্ট এবং রেড ডিক্লাইন সেটআপ
                 document.getElementById('mute-btn').className = "circle-action-btn btn-accept-call";
                 document.getElementById('mute-btn').innerHTML = "🟢<span>Accept</span>";
                 document.getElementById('mute-btn').onclick = acceptIncomingCall;
@@ -354,10 +350,16 @@
     async function acceptIncomingCall() {
         try { document.getElementById('ringtone').pause(); } catch(e){}
         
-        // কল রিসিভ হওয়ার পর নরমাল মিউট/স্পিকার মুডে রিটার্ন
         document.getElementById('mute-btn').className = "circle-action-btn";
         document.getElementById('mute-btn').innerHTML = "<span id='mute-icon'>🎙️</span><span>Mute</span>";
         document.getElementById('mute-btn').onclick = toggleMute;
         
         document.getElementById('speaker-btn').className = "circle-action-btn";
-        document.getElementById('
+        document.getElementById('speaker-btn').innerHTML = "<span id='speaker-icon'>🔊</span><span>Speaker</span>";
+        document.getElementById('speaker-btn').onclick = toggleSpeaker;
+        
+        await setupAgoraAudio(currentRoomId);
+        
+        const response = await fetch('/accept_call', {
+            method: 'POST',
+            hea
