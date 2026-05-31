@@ -1,116 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Janu Calling - Exclusive Audio Dating Platform</title>
-    <!-- Agora Official SDK for Crystal Clear Voice Quality -->
-    <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.20.0.js"></script>
-    <style>
-        :root {
-            --dark-bg: #0b0e14;
-            --card-bg: rgba(22, 27, 38, 0.85);
-            --accent-neon: #ff2a5f;
-            --neon-glow: 0 0 15px rgba(255, 42, 95, 0.45);
-            --success-neon: #00f2fe;
-            --success-glow: 0 0 15px rgba(0, 242, 254, 0.45);
-            --text-main: #ffffff;
-            --text-sub: #8fa0ba;
-        }
-
-        body { 
-            font-family: 'Segoe UI', Roboto, Helvetica, sans-serif; 
-            background: radial-gradient(circle at top right, #1f1224 0%, var(--dark-bg) 100%);
-            color: var(--text-main); margin: 0; padding: 15px; min-height: 100vh;
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        .container { 
-            max-width: 410px; width: 100%; background: var(--card-bg); 
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            padding: 30px 22px; border-radius: 28px; 
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); 
-            box-sizing: border-box; position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        h2 { 
-            font-size: 25px; font-weight: 800; text-align: center; margin: 0 0 5px 0;
-            background: linear-gradient(45deg, #ff2a5f, #ff758c);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: var(--neon-glow);
-        }
-
-        .tagline { text-align: center; color: var(--text-sub); font-size: 13px; margin-bottom: 20px; font-weight: 500; }
-        hr { border: 0; height: 1px; background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.1), rgba(255,255,255,0)); margin: 20px 0; }
-        
-        input, select { 
-            width: 100%; padding: 14px 16px; margin: 12px 0; border-radius: 14px; 
-            border: 1px solid rgba(255, 255, 255, 0.1); box-sizing: border-box; font-size: 15px; 
-            background: rgba(11, 14, 20, 0.6); color: var(--text-main); transition: all 0.3s;
-        }
-        input:focus { border-color: var(--accent-neon); outline: none; box-shadow: var(--neon-glow); background: rgba(11, 14, 20, 0.9); }
-
-        button { 
-            width: 100%; padding: 15px; margin: 10px 0; border-radius: 14px; color: white; 
-            font-size: 16px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s ease;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        button:active { transform: scale(0.97); }
-
-        .btn-neon-pink { background: linear-gradient(135deg, #ff2a5f 0%, #ff758c 100%); box-shadow: var(--neon-glow); }
-        .btn-neon-blue { background: linear-gradient(135deg, #0072ff 0%, #00f2fe 100%); box-shadow: var(--success-glow); }
-        .btn-neon-dark { background: linear-gradient(135deg, #232526 0%, #414345 100%); border: 1px solid rgba(255,255,255,0.1); }
-
-        .hidden { display: none !important; }
-        .status-badge { padding: 14px; margin: 15px 0; border-radius: 14px; font-weight: 700; background: rgba(0, 242, 254, 0.1); color: var(--success-neon); text-align: center; border: 1px solid rgba(0, 242, 254, 0.2); text-shadow: 0 0 5px rgba(0,242,254,0.3); }
-
-        .tab-bar { display: flex; gap: 10px; margin-bottom: 20px; background: rgba(0,0,0,0.2); padding: 5px; border-radius: 12px; }
-        .tab-item { background: transparent; color: var(--text-sub); padding: 10px; font-size: 14px; border-radius: 10px; width: 50%; margin: 0; border: none; cursor: pointer; font-weight: bold; }
-        .tab-item.active { background: linear-gradient(135deg, #ff2a5f 0%, #ff758c 100%); color: white; box-shadow: var(--neon-glow); }
-
-        .guide-card { background: rgba(255, 42, 95, 0.05); border: 1px dashed rgba(255, 42, 95, 0.3); padding: 15px; border-radius: 14px; margin-bottom: 20px; }
-        .guide-card h4 { margin: 0 0 8px 0; color: var(--accent-neon); font-size: 14px; text-shadow: var(--neon-glow); }
-        .guide-steps { margin: 0; padding-left: 18px; font-size: 13px; color: var(--text-sub); line-height: 1.6; }
-
-        .plan-section { margin-top: 25px; }
-        .plan-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 14px 16px; border-radius: 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .btn-pay-action { width: auto; padding: 8px 16px; margin: 0; font-size: 13px; background: linear-gradient(135deg, #0072ff, #00f2fe); box-shadow: var(--success-glow); }
-
-        .live-call-container {
-            background: #090c10; border: 1px solid rgba(255, 255, 255, 0.08); padding: 35px 20px; border-radius: 24px; margin: 15px 0;
-            text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-        }
-        .call-avatar-glow { width: 90px; height: 90px; background: linear-gradient(135deg, #ff2a5f 0%, #ff758c 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 38px; margin: 0 auto 20px auto; animation: pulseGlow 1.4s infinite; }
-        .call-status-text { font-size: 15px; color: var(--success-neon); margin: 5px 0 25px 0; font-weight: 600; letter-spacing: 0.5px; text-shadow: var(--success-glow); }
-
-        .call-controls-wrapper { display: flex; justify-content: center; gap: 20px; margin-top: 25px; width: 100%; }
-        .circle-action-btn {
-            width: 58px; height: 58px; border-radius: 50%; background: rgba(255,255,255,0.06);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            font-size: 20px; cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,255,255,0.05); color: white; padding: 0; margin: 0;
-        }
-        .circle-action-btn span { font-size: 10px; font-weight: 600; margin-top: 4px; color: var(--text-sub); }
-        .circle-action-btn.active { background: var(--text-main); color: var(--dark-bg); }
-        .circle-action-btn.active span { color: var(--dark-bg); }
-        
-        .circle-action-btn.btn-accept-call { background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%); box-shadow: var(--success-glow); }
-        .circle-action-btn.btn-decline-call { background: linear-gradient(135deg, #ff0844 0%, #ff4e50 100%); box-shadow: var(--neon-glow); }
-
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 0 0 rgba(255, 42, 95, 0.5); }
-            70% { box-shadow: 0 0 0 18px rgba(255, 42, 95, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 42, 95, 0); }
-        }
-    <</style>
-</head>
-<body>
-        
+```html
     <h2>Janu Calling</h2>
     <div class="tagline">Premium Audio Dating & Hosting Platform</div>
     <hr>
 
-    <!-- 🔐 ১. লগইন ও রেজিস্ট্রেশন পেজ -->
+    <!-- 🔐 1. Login & Registration Page -->
     <div id="auth-section">
         <div class="guide-card">
             <h4>🎁 New User Offer!</h4>
@@ -138,7 +31,10 @@
         <div id="login-form" class="hidden">
             <input type="number" id="login-phone" placeholder="Enter Registered Mobile Number">
             <button class="btn-neon-blue" onclick="loginUser()">🔓 Unlock Dashboard</button>
-    <!-- 📲 ২. লাইভ কলিং ও নোটিফিকেশন ইন্টারফেস -->
+        </div>
+    </div>
+
+    <!-- 📲 2. Live Calling & Notification Interface -->
     <div id="call-box" class="live-call-container hidden">
         <div class="call-avatar-glow">📞</div>
         <h3 id="call-person-name" style="color: white; margin: 0; font-size: 22px;">Connecting...</h3>
@@ -154,8 +50,10 @@
             <button class="circle-action-btn btn-decline-call" id="hangup-main-btn" onclick="hangUpCall()">
                 <span>🛑</span><span>End Call</span>
             </button>
-        
-    <!-- 🙋‍♂️ ৩. মেল ইউজার ড্যাশবোর্ড -->
+        </div>
+    </div>
+
+    <!-- 🙋‍♂️ 3. Male User Dashboard -->
     <div id="boy-dashboard" class="hidden">
         <h3>Welcome, <span id="boy-name-display" style="color: var(--accent-neon);"></span> 👋</h3>
         <div class="status-badge">💰 Wallet Balance: ₹<span id="balance-display">0</span> (Rate: ₹2/min)</div>
@@ -170,7 +68,7 @@
         </div>
     </div>
 
-    <!-- 🙋‍♀️ ৪. ফিমেল হোস্টিং ড্যাশবোর্ড -->
+    <!-- 🙋‍♀️ 4. Female Hosting Dashboard -->
     <div id="girl-dashboard" class="hidden">
         <h3>Host Verified: <span id="girl-name-display" style="color: var(--accent-neon);"></span> ✨</h3>
         <p style="color: var(--text-sub); text-align: center; font-size: 14px;">Turn status Online to auto-receive incoming call requests from users:</p>
@@ -205,7 +103,6 @@
         }
     }
 
-    // 📡 ফিক্সড রেজিস্ট্রেশন ব্যাকগ্রাউন্ড কানেকশন বাটন ফাংশন
     async function registerUser() {
         const name = document.getElementById('reg-name').value;
         const phone = document.getElementById('reg-phone').value;
@@ -221,7 +118,6 @@
         if(data.status === "success") { openDashboard(data); } else { alert(data.message); }
     }
 
-    // 📡 ফিক্সড লগইন ব্যাকগ্রাউন্ড কানেকশন বাটন ফাংশন
     async function loginUser() {
         const phone = document.getElementById('login-phone').value;
         if(!phone) return alert("Please fill your registered phone number!");
@@ -354,4 +250,104 @@
         document.getElementById('speaker-btn').innerHTML = "<span id='speaker-icon'>🔊</span><span>Speaker</span>";
         document.getElementById('speaker-btn').onclick = toggleSpeaker;
         
-        await setupAgoraAudio(curre
+        await setupAgoraAudio(currentRoomId);
+        
+        const response = await fetch('/accept_call', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ room_id: currentRoomId })
+        });
+        const data = await response.json();
+        if(data.status === 'connected') { startCallDurationTimer(); }
+    }
+
+    async function checkCallSyncStatus() {
+        if (!currentRoomId) return;
+        const response = await fetch('/check_incoming', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone: myPhone })
+        });
+        if (response.status === 404 || currentRoomId === "") { cleanUpCallUI(); }
+    }
+
+    function startCallDurationTimer() {
+        if(callTimerInterval) clearInterval(callTimerInterval);
+        if(balanceInterval) clearInterval(balanceInterval);
+        seconds = 0;
+        document.getElementById('call-status-label').innerText = "Live (00:00)";
+        
+        callTimerInterval = setInterval(() => {
+            seconds++;
+            let mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+            let secs = (seconds % 60).toString().padStart(2, '0');
+            document.getElementById('call-status-label').innerText = `Live Connected (${mins}:${secs})`;
+        }, 1000);
+
+        if(myGender === 'male') {
+            balanceInterval = setInterval(async () => {
+                const res = await fetch('/deduct_minute', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ boy_phone: myPhone, room_id: currentRoomId })
+                });
+                const data = await res.json();
+                if(data.status === "success") {
+                    document.getElementById('balance-display').innerText = data.new_balance;
+                } else { hangUpCall(); }
+            }, 60000); 
+        }
+    }
+
+    function toggleMute() {
+        isMuted = !isMuted;
+        if(localAudioTrack) {
+            localAudioTrack.setEnabled(!isMuted);
+            document.getElementById('mute-btn').classList.toggle('active', isMuted);
+            document.getElementById('mute-icon').innerText = isMuted ? "🔇" : "🎙️";
+        }
+    }
+
+    function toggleSpeaker() {
+        isSpeaker = !isSpeaker;
+        document.getElementById('speaker-btn').classList.toggle('active', isSpeaker);
+        if(remoteAudioTrack) {
+            remoteAudioTrack.setVolume(isSpeaker ? 200 : 100);
+            document.getElementById('speaker-icon').innerText = isSpeaker ? "📢" : "🔊";
+        }
+    }
+
+    async function hangUpCall() {
+        if(currentRoomId !== "") {
+            await fetch('/end_call', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ room_id: currentRoomId })
+            });
+        }
+        cleanUpCallUI();
+    }
+
+    async function cleanUpCallUI() {
+        try { document.getElementById('ringtone').pause(); document.getElementById('ringtone').currentTime = 0; } catch(e){}
+        if(callTimerInterval) clearInterval(callTimerInterval); 
+        if(balanceInterval) clearInterval(balanceInterval);
+        if(checkAcceptInterval) clearInterval(checkAcceptInterval);
+        if(syncInterval) clearInterval(syncInterval);
+        
+        if (localAudioTrack) { localAudioTrack.stop(); localAudioTrack.close(); localAudioTrack = null; }
+        if (remoteAudioTrack) { remoteAudioTrack.stop(); remoteAudioTrack = null; }
+        try { await agoraClient.leave(); } catch(e){}
+
+        currentRoomId = "";
+        document.getElementById('call-box').classList.add('hidden');
+        
+        if(myGender === 'male') {
+            document.getElementById('boy-dashboard').classList.remove('hidden');
+        } else {
+            document.getElementById('girl-dashboard').classList.remove('hidden');
+        }
+    }
+</script>
+</body>
+</html>
