@@ -1,352 +1,88 @@
- <h2>Janu Calling</h2>
-    <div class="tagline">Premium Audio Dating & Hosting Platform</div>
-    <hr>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- 🔐 1. Login & Registration Page -->
-    <div id="auth-section">
-        <div class="guide-card">
-            <h4>🎁 New User Offer!</h4>
-            <ol class="guide-steps">
-                <li>Register a new account to get <b>₹20 welcome bonus</b>.</li>
-                <li>Hostings (Females) earn on every incoming audio call.</li>
-            </ol>
-        </div>
+<title>Janu Dating App</title>
 
-        <div class="tab-bar">
-            <button class="tab-item active" id="tab-reg-btn" onclick="toggleAuthTab('reg')">Create Account</button>
-            <button class="tab-item" id="tab-login-btn" onclick="toggleAuthTab('login')">Secure Login</button>
-        </div>
+<style>
+body{
+    margin:0;
+    background:#f8b6c5;
+    font-family:Arial,sans-serif;
+}
 
-        <div id="reg-form">
-            <input type="text" id="reg-name" placeholder="Enter Your Full Name">
-            <input type="number" id="reg-phone" placeholder="Enter 10-Digit Mobile Number">
-            <select id="reg-gender">
-                <option value="male">🙋‍♂️ Male (User Call Mode)</option>
-                <option value="female">🙋‍♀️ Female (Earning/Host Mode)</option>
-            </select>
-            <button class="btn-neon-pink" onclick="registerUser()">🚀 Join & Get ₹20 Bonus</button>
-        </div>
+.container{
+    width:90%;
+    max-width:400px;
+    background:#fff;
+    margin:50px auto;
+    padding:20px;
+    border-radius:20px;
+    box-shadow:0 0 15px rgba(0,0,0,0.2);
+}
 
-        <div id="login-form" class="hidden">
-            <input type="number" id="login-phone" placeholder="Enter Registered Mobile Number">
-            <button class="btn-neon-blue" onclick="loginUser()">🔓 Unlock Dashboard</button>
-        </div>
-    </div>
+h2{
+    text-align:center;
+    color:#ff3366;
+}
 
-    <!-- 📲 2. Live Calling & Notification Interface -->
-    <div id="call-box" class="live-call-container hidden">
-        <div class="call-avatar-glow">📞</div>
-        <h3 id="call-person-name" style="color: white; margin: 0; font-size: 22px;">Connecting...</h3>
-        <div class="call-status-text" id="call-status-label">Ringing...</div>
+input,select{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    box-sizing:border-box;
+}
 
-        <div class="call-controls-wrapper">
-            <button class="circle-action-btn" id="mute-btn" onclick="toggleMute()">
-                <span id="mute-icon">🎙️</span><span>Mute</span>
-            </button>
-            <button class="circle-action-btn" id="speaker-btn" onclick="toggleSpeaker()">
-                <span id="speaker-icon">🔊</span><span>Speaker</span>
-            </button>
-            <button class="circle-action-btn btn-decline-call" id="hangup-main-btn" onclick="hangUpCall()">
-                <span>🛑</span><span>End Call</span>
-            </button>
-        </div>
-    </div>
+button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    border-radius:10px;
+    background:#222;
+    color:white;
+    font-size:16px;
+}
 
-    <!-- 🙋‍♂️ 3. Male User Dashboard -->
-    <div id="boy-dashboard" class="hidden">
-        <h3>Welcome, <span id="boy-name-display" style="color: var(--accent-neon);"></span> 👋</h3>
-        <div class="status-badge">💰 Wallet Balance: ₹<span id="balance-display">0</span> (Rate: ₹2/min)</div>
-        
-        <button class="btn-neon-pink" id="boy-call-action-btn" onclick="startInAppCall()">💖 Match & Call Active Host</button>
-        
-        <div class="plan-section">
-            <h4>💳 Express Recharge & Talktime:</h4>
-            <div class="plan-item"><div><b>₹10 VIP Pack</b><p style="margin:2px 0 0 0;font-size:11px;color:var(--text-sub);">5 Minutes Live Voice Talktime</p></div><button class="btn-pay-action" onclick="payUPI(10)">Buy</button></div>
-            <div class="plan-item"><div><b>₹20 Classic Pack</b><p style="margin:2px 0 0 0;font-size:11px;color:var(--text-sub);">10 Minutes Live Voice Talktime</p></div><button class="btn-pay-action" onclick="payUPI(20)">Buy</button></div>
-            <div class="plan-item"><div><b>₹50 Ultimate Pack</b><p style="margin:2px 0 0 0;font-size:11px;color:var(--text-sub);">25 Minutes Live Voice Talktime</p></div><button class="btn-pay-action" onclick="payUPI(50)">Buy</button></div>
-        </div>
-    </div>
+.call-btn{
+    background:#28a745;
+}
 
-    <!-- 🙋‍♀️ 4. Female Hosting Dashboard -->
-    <div id="girl-dashboard" class="hidden">
-        <h3>Host Verified: <span id="girl-name-display" style="color: var(--accent-neon);"></span> ✨</h3>
-        <p style="color: var(--text-sub); text-align: center; font-size: 14px;">Turn status Online to auto-receive incoming call requests from users:</p>
-        <button class="btn-neon-blue" id="girl-online-btn" onclick="updateStatus('available')">🟢 Go Online Now</button>
-        <button class="btn-neon-dark" id="girl-offline-btn" onclick="updateStatus('offline')">⚫ Go Offline</button>
-        <div id="girl-status-text" style="margin-top: 15px; font-weight:bold; text-align: center;"></div>
-    </div>
+.video-btn{
+    background:#007bff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>❤️ Janu Dating App ❤️</h2>
+
+<input type="text" placeholder="Full Name">
+
+<input type="tel" placeholder="Phone Number">
+
+<select>
+<option>Male</option>
+<option>Female</option>
+<option>Other</option>
+</select>
+
+<input type="password" placeholder="Password">
+
+<button>Login Now</button>
+
+<button class="call-btn">📞 Voice Call</button>
+
+<button class="video-btn">🎥 Video Call</button>
+
 </div>
 
-<audio id="ringtone" src="https://assets.mixkit.co/active_storage/sfx/1360/1360-84.wav" loop preload="auto"></audio>
-
-<script>
-    let myPhone = ""; let myGender = ""; let currentRoomId = "";
-    let callTimerInterval; let checkIncomingInterval; let balanceInterval; let checkAcceptInterval; let syncInterval;
-    let seconds = 0; let isMuted = false; let isSpeaker = false;
-    
-    let agoraClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-    let localAudioTrack = null; let remoteAudioTrack = null;
-    const AGORA_APP_ID = "99042b7818e64c39b8823f6eb7cbccdb";
-
-    function toggleAuthTab(type) {
-        if(type === 'reg') {
-            document.getElementById('reg-form').classList.remove('hidden');
-            document.getElementById('login-form').classList.add('hidden');
-            document.getElementById('tab-reg-btn').classList.add('active');
-            document.getElementById('tab-login-btn').classList.remove('active');
-        } else {
-            document.getElementById('reg-form').classList.add('hidden');
-            document.getElementById('login-form').classList.remove('hidden');
-            document.getElementById('tab-reg-btn').classList.remove('active');
-            document.getElementById('tab-login-btn').classList.add('active');
-        }
-    }
-
-    async function registerUser() {
-        const name = document.getElementById('reg-name').value;
-        const phone = document.getElementById('reg-phone').value;
-        const gender = document.getElementById('reg-gender').value;
-        if(!name || !phone) return alert("Please fill all details!");
-
-        const response = await fetch('/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: name, phone: phone, gender: gender })
-        });
-        const data = await response.json();
-        if(data.status === "success") { openDashboard(data); } else { alert(data.message); }
-    }
-
-    async function loginUser() {
-        const phone = document.getElementById('login-phone').value;
-        if(!phone) return alert("Please fill your registered phone number!");
-        const response = await fetch('/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone: phone })
-        });
-        const data = await response.json();
-        if(data.status === "success") { openDashboard(data); } else { alert(data.message); }
-    }
-
-    function openDashboard(data) {
-        myPhone = data.phone; myGender = data.gender;
-        document.getElementById('auth-section').classList.add('hidden');
-        if(myGender === 'male') {
-            document.getElementById('boy-name-display').innerText = data.name;
-            document.getElementById('balance-display').innerText = data.balance;
-            document.getElementById('boy-dashboard').classList.remove('hidden');
-        } else {
-            document.getElementById('girl-name-display').innerText = data.name;
-            document.getElementById('girl-dashboard').classList.remove('hidden');
-            updateStatus('available');
-            checkIncomingInterval = setInterval(checkIncomingCalls, 3000);
-        }
-    }
-
-    async function updateStatus(status) {
-        await fetch('/update_status', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone: myPhone, status: status })
-        });
-        document.getElementById('girl-status-text').innerHTML = status === 'available' ? '<span style="color:var(--success-neon);">STATUS: ONLINE</span>' : '<span style="color:var(--text-sub);">STATUS: OFFLINE</span>';
-    }
-
-    function payUPI(amount) {
-        window.location.href = `upi://pay?pa=halder.safikul2@ybl&pn=JanuCalling&am=${amount}&cu=INR&tn=Recharge_${myPhone}`;
-    }
-
-    async function setupAgoraAudio(channelName) {
-        try {
-            agoraClient.on("user-published", async (user, mediaType) => {
-                await agoraClient.subscribe(user, mediaType);
-                if (mediaType === "audio") {
-                    remoteAudioTrack = user.audioTrack;
-                    remoteAudioTrack.play();
-                }
-            });
-            await agoraClient.join(AGORA_APP_ID, channelName, null, null);
-            localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-            await agoraClient.publish([localAudioTrack]);
-        } catch (err) { console.error("Agora Error:", err); }
-    }
-
-    async function startInAppCall() {
-        const response = await fetch('/make_call', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone: myPhone })
-        });
-        const data = await response.json();
-        
-        if(data.status === "ringing") {
-            currentRoomId = data.room_id;
-            document.getElementById('boy-dashboard').classList.add('hidden');
-            document.getElementById('call-person-name').innerText = data.girl_name;
-            document.getElementById('call-status-label').innerText = "Ringing...";
-            document.getElementById('call-box').classList.remove('hidden');
-            try { document.getElementById('ringtone').play(); } catch(e){}
-
-            syncInterval = setInterval(checkCallSyncStatus, 2000);
-
-            checkAcceptInterval = setInterval(async () => {
-                const checkRes = await fetch('/check_incoming', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone: data.girl_phone })
-                });
-                const checkData = await checkRes.json();
-                if(!checkData.incoming) { 
-                    clearInterval(checkAcceptInterval);
-                    try { document.getElementById('ringtone').pause(); } catch(e){}
-                    await setupAgoraAudio(currentRoomId);
-                    startCallDurationTimer(); 
-                }
-            }, 3000);
-        } else { alert(data.message); }
-    }
-
-    async function checkIncomingCalls() {
-        if (document.getElementById('call-box').classList.contains('hidden')) {
-            const response = await fetch('/check_incoming', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone: myPhone })
-            });
-            const data = await response.json();
-            
-            if(data.incoming) {
-                currentRoomId = data.room_id;
-                document.getElementById('girl-dashboard').classList.add('hidden');
-                document.getElementById('call-person-name').innerText = data.boy_name;
-                document.getElementById('call-status-label').innerText = "Incoming Audio Call Request...";
-                
-                document.getElementById('mute-btn').className = "circle-action-btn btn-accept-call";
-                document.getElementById('mute-btn').innerHTML = "🟢<span>Accept</span>";
-                document.getElementById('mute-btn').onclick = acceptIncomingCall;
-                
-                document.getElementById('speaker-btn').className = "circle-action-btn btn-decline-call";
-                document.getElementById('speaker-btn').innerHTML = "🛑<span>Decline</span>";
-                document.getElementById('speaker-btn').onclick = hangUpCall;
-                
-                document.getElementById('call-box').classList.remove('hidden');
-                try { document.getElementById('ringtone').play(); } catch(e){}
-
-                syncInterval = setInterval(checkCallSyncStatus, 2000);
-            }
-        }
-    }
-
-    async function acceptIncomingCall() {
-        try { document.getElementById('ringtone').pause(); } catch(e){}
-        
-        document.getElementById('mute-btn').className = "circle-action-btn";
-        document.getElementById('mute-btn').innerHTML = "<span id='mute-icon'>🎙️</span><span>Mute</span>";
-        document.getElementById('mute-btn').onclick = toggleMute;
-        
-        document.getElementById('speaker-btn').className = "circle-action-btn";
-        document.getElementById('speaker-btn').innerHTML = "<span id='speaker-icon'>🔊</span><span>Speaker</span>";
-        document.getElementById('speaker-btn').onclick = toggleSpeaker;
-        
-        await setupAgoraAudio(currentRoomId);
-        
-        const response = await fetch('/accept_call', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ room_id: currentRoomId })
-        });
-        const data = await response.json();
-        if(data.status === 'connected') { startCallDurationTimer(); }
-    }
-
-    async function checkCallSyncStatus() {
-        if (!currentRoomId) return;
-        const response = await fetch('/check_incoming', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone: myPhone })
-        });
-        if (response.status === 404 || currentRoomId === "") { cleanUpCallUI(); }
-    }
-
-    function startCallDurationTimer() {
-        if(callTimerInterval) clearInterval(callTimerInterval);
-        if(balanceInterval) clearInterval(balanceInterval);
-        seconds = 0;
-        document.getElementById('call-status-label').innerText = "Live (00:00)";
-        
-        callTimerInterval = setInterval(() => {
-            seconds++;
-            let mins = Math.floor(seconds / 60).toString().padStart(2, '0');
-            let secs = (seconds % 60).toString().padStart(2, '0');
-            document.getElementById('call-status-label').innerText = `Live Connected (${mins}:${secs})`;
-        }, 1000);
-
-        if(myGender === 'male') {
-            balanceInterval = setInterval(async () => {
-                const res = await fetch('/deduct_minute', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ boy_phone: myPhone, room_id: currentRoomId })
-                });
-                const data = await res.json();
-                if(data.status === "success") {
-                    document.getElementById('balance-display').innerText = data.new_balance;
-                } else { hangUpCall(); }
-            }, 60000); 
-        }
-    }
-
-    function toggleMute() {
-        isMuted = !isMuted;
-        if(localAudioTrack) {
-            localAudioTrack.setEnabled(!isMuted);
-            document.getElementById('mute-btn').classList.toggle('active', isMuted);
-            document.getElementById('mute-icon').innerText = isMuted ? "🔇" : "🎙️";
-        }
-    }
-
-    function toggleSpeaker() {
-        isSpeaker = !isSpeaker;
-        document.getElementById('speaker-btn').classList.toggle('active', isSpeaker);
-        if(remoteAudioTrack) {
-            remoteAudioTrack.setVolume(isSpeaker ? 200 : 100);
-            document.getElementById('speaker-icon').innerText = isSpeaker ? "📢" : "🔊";
-        }
-    }
-
-    async function hangUpCall() {
-        if(currentRoomId !== "") {
-            await fetch('/end_call', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ room_id: currentRoomId })
-            });
-        }
-        cleanUpCallUI();
-    }
-
-    async function cleanUpCallUI() {
-        try { document.getElementById('ringtone').pause(); document.getElementById('ringtone').currentTime = 0; } catch(e){}
-        if(callTimerInterval) clearInterval(callTimerInterval); 
-        if(balanceInterval) clearInterval(balanceInterval);
-        if(checkAcceptInterval) clearInterval(checkAcceptInterval);
-        if(syncInterval) clearInterval(syncInterval);
-        
-        if (localAudioTrack) { localAudioTrack.stop(); localAudioTrack.close(); localAudioTrack = null; }
-        if (remoteAudioTrack) { remoteAudioTrack.stop(); remoteAudioTrack = null; }
-        try { await agoraClient.leave(); } catch(e){}
-
-        currentRoomId = "";
-        document.getElementById('call-box').classList.add('hidden');
-        
-        if(myGender === 'male') {
-            document.getElementById('boy-dashboard').classList.remove('hidden');
-        } else {
-            document.getElementById('girl-dashboard').classList.remove('hidden');
-        }
-    }
-</script>
 </body>
 </html>
